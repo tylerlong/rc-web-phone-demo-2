@@ -4668,8 +4668,10 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-"ringcentral-web-phone@file:../ringcentral-web-phone-2":
-  version "2.0.0-beta.1"
+ringcentral-web-phone@2.0.0-alpha.1:
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.0-alpha.1.tgz#fe7e74d82aad102aeb045a9bf62b5c14daa68c14"
+  integrity sha512-7RBRLixCKvikjPRIqawk1Jfs012UEhm/3ZJ/cgtpCAku9zi3UShhMzUQTIV5/6OWjg9rYpDNWywtNIczSBGSNA==
   dependencies:
     blueimp-md5 "^2.19.0"
     manate "^0.6.5"
