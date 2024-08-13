@@ -1,33 +1,21 @@
 import React from 'react';
-import { Button, Space, Typography } from 'antd';
+import { notification, Typography } from 'antd';
 import { auto } from 'manate/react';
+import type { Managed } from 'manate/models';
 
-import type { Store } from './store';
+import type { Store } from './models/store';
+import Login from './components/login';
+import Phone from './components/phone';
 
-const { Text, Title } = Typography;
-
-const App = (props: { store: Store }) => {
+const App = (props: { store: Managed<Store> }) => {
   const { store } = props;
+  const [api, contextHolder] = notification.useNotification();
+  global.notifier = api;
   const render = () => (
     <>
-      <Title>Untitled App</Title>
-      <Space>
-        <Button
-          onClick={() => {
-            store.count -= 1;
-          }}
-        >
-          -
-        </Button>
-        <Text>{store.count}</Text>
-        <Button
-          onClick={() => {
-            store.count += 1;
-          }}
-        >
-          +
-        </Button>
-      </Space>
+      {contextHolder}
+      <Typography.Title>RingCentral Web Phone 2 Demo</Typography.Title>
+      {store.rcToken === '' ? <Login store={store} /> : <Phone store={store} />}
     </>
   );
   return auto(render, props);
