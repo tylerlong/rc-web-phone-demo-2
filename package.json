@@ -7,7 +7,7 @@
     "demo": "tsx -r dotenv-override-true/config src/demo.ts",
     "lint": "tsc --jsx react --skipLibCheck --noEmit --target ESNext --moduleResolution NodeNext --module NodeNext ./src/*.ts && eslint --fix '**/*.{ts,tsx,js,jsx}' && prettier --write . && sort-package-json",
     "serve": "rm -rf .parcel-cache && parcel src/index.html src/callback.html --dist-dir temp",
-    "build": "rm -rf .parcel-cache && parcel build src/index.html src/callback.html --dist-dir docs"
+    "build": "rm -rf .parcel-cache && parcel build src/index.html src/callback.html --dist-dir docs --public-url ./"
   },
   "dependencies": {
     "@rc-ex/authorize-uri": "^1.1.16",
