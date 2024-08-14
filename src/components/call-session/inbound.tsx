@@ -25,7 +25,7 @@ const InboundSession = (props: { session: InboundCallSession }) => {
           <Button onClick={() => session.answer()} type="primary">
             Answer
           </Button>
-          <Button onClick={() => session.toVoiceMail()}>To Voicemail</Button>
+          <Button onClick={() => session.toVoicemail()}>To Voicemail</Button>
           <Popover
             open={forwardPopoverVisible}
             onOpenChange={(visible) => setForwardPopoverVisible(visible)}
