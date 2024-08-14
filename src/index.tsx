@@ -1,9 +1,9 @@
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import App from './app';
+import App from './components/app';
 import store from './store';
-import main from './actions/main';
+import init from './store/init';
 
 const container = document.createElement('div');
 document.body.appendChild(container);
@@ -14,4 +14,4 @@ root.render(
   </StrictMode>,
 );
 
-main();
+init();

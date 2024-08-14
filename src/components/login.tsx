@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Divider, Form, Input, Typography } from 'antd';
 import { auto } from 'manate/react';
 
-import type { Store } from '../models/store';
+import type { Store } from '../store';
 
 const { Text } = Typography;
 

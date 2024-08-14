@@ -4,7 +4,7 @@ import { Button, Divider, Empty, Form, Input, Select, Space, Typography } from '
 import type { Managed } from 'manate/models';
 import { autoRun } from 'manate';
 
-import type { Store } from '../models/store';
+import type { Store } from '../store';
 import CallSession from './call-session';
 
 const Phone = (props: { store: Managed<Store> }) => {
