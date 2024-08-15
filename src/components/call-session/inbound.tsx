@@ -53,7 +53,12 @@ const InboundSession = (props: { session: InboundCallSession }) => {
           </Popover>
           <Popover
             open={replyPopoverVisible}
-            onOpenChange={(visible) => setReplyPopoverVisible(visible)}
+            onOpenChange={(visible) => {
+              setReplyPopoverVisible(visible);
+              if (visible) {
+                session.startReply();
+              }
+            }}
             trigger="click"
             placement="top"
             content={
@@ -64,9 +69,31 @@ const InboundSession = (props: { session: InboundCallSession }) => {
                   onChange={(e) => setReplyText(e.target.value.trim())}
                 />
                 <Button
-                  onClick={() => {
-                    session.reply(replyText);
+                  onClick={async () => {
                     setReplyPopoverVisible(false);
+                    const response = await session.reply(replyText);
+                    if (response.Bdy.Sts === '0') {
+                      const message = `${response.Bdy.Phn} ${response.Bdy.Nm}`;
+                      let description = '';
+                      switch (response.Bdy.Resp) {
+                        case '1':
+                          description = 'Yes';
+                          break;
+                        case '2':
+                          description = 'No';
+                          break;
+                        case '3':
+                          description = `Urgent, please call ${response.Bdy.ExtNfo} immediately!`;
+                          break;
+                        default:
+                          break;
+                      }
+                      global.notifier.info({
+                        message, // who replied
+                        description, // what replied
+                        duration: 0,
+                      });
+                    }
                   }}
                 >
                   Reply
