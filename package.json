@@ -6,7 +6,7 @@
   "scripts": {
     "build": "yarn lint && rm -rf .parcel-cache && parcel build src/index.html src/callback.html --dist-dir docs --public-url ./",
     "lint": "tsc --jsx react --skipLibCheck --noEmit --target ESNext --moduleResolution NodeNext --module NodeNext ./src/*.tsx && eslint --fix '**/*.{ts,tsx,js,jsx}' && prettier --write . && sort-package-json",
-    "serve": "rm -rf .parcel-cache && parcel src/index.html src/callback.html --dist-dir temp"
+    "serve": "rm -rf .parcel-cache && parcel src/index.html src/callback.html --dist-dir temp --no-hmr"
   },
   "dependencies": {
     "@rc-ex/authorize-uri": "^1.1.16",
