@@ -1,8 +1,10 @@
 import RingCentral from '@rc-ex/core';
+import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
 import { exclude } from 'manate';
 import WebPhone from 'ringcentral-web-phone';
 import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound';
 import type OutboundCallSession from 'ringcentral-web-phone/call-session/outbound';
+import localforage from 'localforage';
 
 import store from '.';
 
@@ -37,14 +39,22 @@ const afterLogin = async () => {
   ];
 
   // create and initialize a web phone
-  const r = await rc
-    .restapi()
-    .clientInfo()
-    .sipProvision()
-    .post({
-      sipInfo: [{ transport: 'WSS' }],
-    });
-  const webPhone = new WebPhone({ sipInfo: r.sipInfo![0], instanceId: 'my-unique-phone-instance-id' });
+  let sipInfo = await localforage.getItem<SipInfoResponse>('rc-sip-info');
+  if (sipInfo === null) {
+    console.log('Genereate new sipInfo');
+    const r = await rc
+      .restapi()
+      .clientInfo()
+      .sipProvision()
+      .post({
+        sipInfo: [{ transport: 'WSS' }],
+      });
+    sipInfo = r.sipInfo![0];
+    await localforage.setItem('rc-sip-info', sipInfo);
+  } else {
+    console.log('Use cached sipInfo');
+  }
+  const webPhone = new WebPhone({ sipInfo });
   store.webPhone = exclude(webPhone);
   await webPhone.enableDebugMode();
   await webPhone.register();
