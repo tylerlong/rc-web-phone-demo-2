@@ -72,10 +72,10 @@ const InboundSession = (props: { session: InboundCallSession }) => {
                   onClick={async () => {
                     setReplyPopoverVisible(false);
                     const response = await session.reply(replyText);
-                    if (response.Bdy.Sts === '0') {
-                      const message = `${response.Bdy.Phn} ${response.Bdy.Nm}`;
+                    if (response.body.Sts === '0') {
+                      const message = `${response.body.Phn} ${response.body.Nm}`;
                       let description = '';
-                      switch (response.Bdy.Resp) {
+                      switch (response.body.Resp) {
                         case '1':
                           description = 'Yes';
                           break;
@@ -83,7 +83,7 @@ const InboundSession = (props: { session: InboundCallSession }) => {
                           description = 'No';
                           break;
                         case '3':
-                          description = `Urgent, please call ${response.Bdy.ExtNfo} immediately!`;
+                          description = `Urgent, please call ${response.body.ExtNfo} immediately!`;
                           break;
                         default:
                           break;
