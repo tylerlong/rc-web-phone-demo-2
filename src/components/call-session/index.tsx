@@ -7,17 +7,15 @@ import type OutboundCallSession from 'ringcentral-web-phone/call-session/outboun
 import InboundSession from './inbound';
 import OutboundSession from './outbound';
 
-const Session = (props: { callSession: CallSession }) => {
+const Session = auto((props: { callSession: CallSession }) => {
   const { callSession } = props;
-  const render = () =>
-    callSession.direction === 'inbound' ? (
-      <InboundSession session={callSession as InboundCallSession} />
-    ) : callSession.state === 'init' ? (
-      <>Initiating an outbound call</>
-    ) : (
-      <OutboundSession session={callSession as OutboundCallSession} />
-    );
-  return auto(render, props);
-};
+  return callSession.direction === 'inbound' ? (
+    <InboundSession session={callSession as InboundCallSession} />
+  ) : callSession.state === 'init' ? (
+    <>Initiating an outbound call</>
+  ) : (
+    <OutboundSession session={callSession as OutboundCallSession} />
+  );
+});
 
 export default Session;

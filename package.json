@@ -11,9 +11,9 @@
   "dependencies": {
     "@rc-ex/authorize-uri": "^1.1.16",
     "@rc-ex/core": "^1.4.0",
-    "antd": "^5.20.2",
+    "antd": "^5.20.3",
     "localforage": "^1.10.0",
-    "manate": "^0.6.5",
+    "manate": "^0.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "ringcentral-web-phone": "^2.0.0-alpha.7"
@@ -21,8 +21,8 @@
   "devDependencies": {
     "@types/node": "^22.5.0",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.2.0",
-    "@typescript-eslint/parser": "^8.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "eslint": "^8.57.0",
@@ -37,9 +37,9 @@
     "sort-package-json": "^2.10.1",
     "stream-browserify": "^3.0.0",
     "string_decoder": "^1.3.0",
-    "timers-browserify": "^2.0.11",
-    "tsx": "^4.17.0",
-    "ttpt": "^0.11.2",
+    "timers-browserify": "^2.0.12",
+    "tsx": "^4.18.0",
+    "ttpt": "^0.12.0",
     "typescript": "^5.5.4",
     "vm-browserify": "^1.1.2",
     "yarn-upgrade-all": "^0.7.4"

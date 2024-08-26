@@ -5,13 +5,13 @@ import { auto } from 'manate/react';
 
 import AnsweredSession from './answered';
 
-const InboundSession = (props: { session: InboundCallSession }) => {
+const InboundSession = auto((props: { session: InboundCallSession }) => {
   const { session } = props;
   const [forwardPopoverVisible, setForwardPopoverVisible] = useState(false);
   const [forwardToNumber, setForwardToNumber] = useState('');
   const [replyPopoverVisible, setReplyPopoverVisible] = useState(false);
   const [replyText, setReplyText] = useState('On my way');
-  const render = () => (
+  return (
     <Space direction="vertical">
       <Space>
         <strong>{session.direction}</strong>
@@ -111,7 +111,6 @@ const InboundSession = (props: { session: InboundCallSession }) => {
       {session.state === 'answered' ? <AnsweredSession session={session} /> : null}
     </Space>
   );
-  return auto(render, props);
-};
+});
 
 export default InboundSession;

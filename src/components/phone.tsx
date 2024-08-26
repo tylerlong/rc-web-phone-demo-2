@@ -7,7 +7,7 @@ import { autoRun } from 'manate';
 import type { Store } from '../store';
 import CallSession from './call-session';
 
-const Phone = (props: { store: Managed<Store> }) => {
+const Phone = auto((props: { store: Managed<Store> }) => {
   const { store } = props;
   const [callee, setCallee] = React.useState<string>('');
   const [callerId, setCallerId] = React.useState<string>('');
@@ -20,7 +20,7 @@ const Phone = (props: { store: Managed<Store> }) => {
     start();
     return () => stop();
   }, []);
-  const render = () => (
+  return (
     <>
       <Button id="logout-btn" onClick={() => store.logout()}>
         Log out
@@ -81,7 +81,6 @@ const Phone = (props: { store: Managed<Store> }) => {
       </Space>
     </>
   );
-  return auto(render, props);
-};
+});
 
 export default Phone;

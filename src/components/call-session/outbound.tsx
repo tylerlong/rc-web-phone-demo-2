@@ -5,23 +5,20 @@ import { auto } from 'manate/react';
 
 import AnsweredSession from './answered';
 
-const OutboundSession = (props: { session: OutboundCallSession }) => {
+const OutboundSession = auto((props: { session: OutboundCallSession }) => {
   const { session } = props;
-  const render = () => {
-    return (
-      <Space direction="vertical">
-        <Space>
-          <strong>{session.direction}</strong>
-          <span>call from</span>
-          {session.localNumber} <span>to</span>
-          {session.isConference ? <Tag color="red">Conference</Tag> : session.remoteNumber}
-          <Tag color="blue">{session.state}</Tag>
-        </Space>
-        {session.state === 'answered' ? <AnsweredSession session={session} /> : null}
+  return (
+    <Space direction="vertical">
+      <Space>
+        <strong>{session.direction}</strong>
+        <span>call from</span>
+        {session.localNumber} <span>to</span>
+        {session.isConference ? <Tag color="red">Conference</Tag> : session.remoteNumber}
+        <Tag color="blue">{session.state}</Tag>
       </Space>
-    );
-  };
-  return auto(render, props);
-};
+      {session.state === 'answered' ? <AnsweredSession session={session} /> : null}
+    </Space>
+  );
+});
 
 export default OutboundSession;
