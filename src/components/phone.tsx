@@ -66,16 +66,22 @@ const Phone = auto((props: { store: Managed<Store> }) => {
           </Form>
         </Space>
         <Divider>Call Sessions</Divider>
-        {store.callSessions.map((callSession) => (
-          <div key={callSession.callId}>
-            <CallSession callSession={callSession} />
-          </div>
-        ))}
-        {store.callSessions.length === 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No sessions" />}
-        {!store.callSessions.find((s) => s.isConference) && (
+        {store.webPhone && (
           <>
-            <Divider />
-            <Button onClick={() => store.startConference()}>Start a conference</Button>
+            {store.webPhone.callSessions.map((callSession) => (
+              <div key={callSession.callId}>
+                <CallSession callSession={callSession} />
+              </div>
+            ))}
+            {store.webPhone.callSessions.length === 0 && (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No sessions" />
+            )}
+            {!store.webPhone.callSessions.find((s) => s.isConference) && (
+              <>
+                <Divider />
+                <Button onClick={() => store.startConference()}>Start a conference</Button>
+              </>
+            )}
           </>
         )}
       </Space>

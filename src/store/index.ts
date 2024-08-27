@@ -19,15 +19,7 @@ export class Store {
   public primaryNumber = '';
   public callerIds: string[] = [];
 
-  public webPhone: WebPhone; // reference but do not track. Ref: https://github.com/tylerlong/manate?tab=readme-ov-file#reference-but-do-not-track
-  public callSessions: CallSession[] = [];
-
-  public addCallSession(callSession: CallSession) {
-    this.callSessions.push(callSession);
-    callSession.once('disposed', () => {
-      this.callSessions = this.callSessions.filter((cs) => cs.callId !== callSession.callId);
-    });
-  }
+  public webPhone: WebPhone;
 
   public async logout() {
     const rc = new RingCentral({
@@ -105,7 +97,7 @@ export class Store {
 
   // invite a number to an existing conference
   public async inviteToConference(targetNumber: string) {
-    const confSession = this.callSessions.find((cs) => cs.isConference);
+    const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
     if (!confSession) {
       return;
     }
@@ -122,7 +114,7 @@ export class Store {
 
   // merge an existing call session to an existing conference
   public async mergeToConference(callSession: CallSession) {
-    const confSession = this.callSessions.find((cs) => cs.isConference);
+    const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
     if (!confSession) {
       return;
     }
@@ -136,4 +128,5 @@ export class Store {
 }
 
 const store = manage(new Store());
+global.store = store; // for debugging
 export default store;

@@ -160,7 +160,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           <Button>Send DTMF</Button>
         </Popover>
       )}
-      {!session.isConference && store.callSessions.find((s) => s.isConference) && (
+      {!session.isConference && store.webPhone.callSessions.find((s) => s.isConference) && (
         <Button
           onClick={() => {
             store.mergeToConference(session);

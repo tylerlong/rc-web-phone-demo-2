@@ -1,9 +1,6 @@
 import RingCentral from '@rc-ex/core';
 import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
-import { exclude } from 'manate';
 import WebPhone from 'ringcentral-web-phone';
-import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound';
-import type OutboundCallSession from 'ringcentral-web-phone/call-session/outbound';
 import localforage from 'localforage';
 
 import store from '.';
@@ -55,17 +52,9 @@ const afterLogin = async () => {
     console.log('Use cached sipInfo');
   }
   const webPhone = new WebPhone({ sipInfo });
-  store.webPhone = exclude(webPhone);
+  store.webPhone = webPhone;
   await webPhone.enableDebugMode();
   await webPhone.register();
-
-  // add call sessions to store
-  webPhone.on('inboundCall', (inbundCallSession: InboundCallSession) => {
-    store.addCallSession(inbundCallSession);
-  });
-  webPhone.on('outboundCall', (outboundCallSession: OutboundCallSession) => {
-    store.addCallSession(outboundCallSession);
-  });
 };
 
 export default afterLogin;
