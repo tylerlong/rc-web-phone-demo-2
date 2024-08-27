@@ -2,6 +2,7 @@ import RingCentral from '@rc-ex/core';
 import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
 import WebPhone from 'ringcentral-web-phone';
 import localforage from 'localforage';
+import type { SipInfo } from 'ringcentral-web-phone/utils';
 
 import store from '.';
 
@@ -51,7 +52,7 @@ const afterLogin = async () => {
   } else {
     console.log('Use cached sipInfo');
   }
-  const webPhone = new WebPhone({ sipInfo });
+  const webPhone = new WebPhone({ sipInfo: sipInfo as SipInfo });
   store.webPhone = webPhone;
   await webPhone.enableDebugMode();
   await webPhone.register();
