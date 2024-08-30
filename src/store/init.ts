@@ -1,27 +1,27 @@
 import RingCentral from '@rc-ex/core';
 import { autoRun } from 'manate';
-import localForage from 'localforage';
+import localforage from 'localforage';
 
 import store from '.';
 import afterLogin from './after-login';
 
 const init = async () => {
   // load credentials from local
-  store.rcToken = (await localForage.getItem('rcToken')) ?? '';
-  store.refreshToken = (await localForage.getItem('refreshToken')) ?? '';
-  store.server = (await localForage.getItem('server')) ?? 'https://platform.ringcentral.com';
-  store.clientId = (await localForage.getItem('clientId')) ?? '';
-  store.clientSecret = (await localForage.getItem('clientSecret')) ?? '';
-  store.jwtToken = (await localForage.getItem('jwtToken')) ?? '';
+  store.rcToken = (await localforage.getItem('rcToken')) ?? '';
+  store.refreshToken = (await localforage.getItem('refreshToken')) ?? '';
+  store.server = (await localforage.getItem('server')) ?? 'https://platform.ringcentral.com';
+  store.clientId = (await localforage.getItem('clientId')) ?? '';
+  store.clientSecret = (await localforage.getItem('clientSecret')) ?? '';
+  store.jwtToken = (await localforage.getItem('jwtToken')) ?? '';
 
   // auto save credentials to local
   const { start } = autoRun(store, () => {
-    localForage.setItem('rcToken', store.rcToken);
-    localForage.setItem('refreshToken', store.refreshToken);
-    localForage.setItem('server', store.server);
-    localForage.setItem('clientId', store.clientId);
-    localForage.setItem('clientSecret', store.clientSecret);
-    localForage.setItem('jwtToken', store.jwtToken);
+    localforage.setItem('rcToken', store.rcToken);
+    localforage.setItem('refreshToken', store.refreshToken);
+    localforage.setItem('server', store.server);
+    localforage.setItem('clientId', store.clientId);
+    localforage.setItem('clientSecret', store.clientSecret);
+    localforage.setItem('jwtToken', store.jwtToken);
   });
   start();
 

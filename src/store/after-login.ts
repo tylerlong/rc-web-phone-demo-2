@@ -37,7 +37,8 @@ const afterLogin = async () => {
   ];
 
   // create and initialize a web phone
-  let sipInfo = await localforage.getItem<SipInfoResponse>('rc-sip-info');
+  const cacheKey = `rc-sip-info-${store.extInfo.id}`;
+  let sipInfo = await localforage.getItem<SipInfoResponse>(cacheKey);
   if (sipInfo === null) {
     console.log('Genereate new sipInfo');
     const r = await rc
@@ -48,7 +49,7 @@ const afterLogin = async () => {
         sipInfo: [{ transport: 'WSS' }],
       });
     sipInfo = r.sipInfo![0];
-    await localforage.setItem('rc-sip-info', sipInfo);
+    await localforage.setItem(cacheKey, sipInfo);
   } else {
     console.log('Use cached sipInfo');
   }
