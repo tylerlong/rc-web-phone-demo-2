@@ -53,9 +53,8 @@ const afterLogin = async () => {
   } else {
     console.log('Use cached sipInfo');
   }
-  const webPhone = new WebPhone({ sipInfo: sipInfo as SipInfo });
+  const webPhone = new WebPhone({ sipInfo: sipInfo as SipInfo, debug: true });
   store.webPhone = webPhone;
-  await webPhone.enableDebugMode();
   await webPhone.register();
 };
 

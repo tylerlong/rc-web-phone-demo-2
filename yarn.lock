@@ -4186,10 +4186,10 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-ringcentral-web-phone@^2.0.0-alpha.13:
-  version "2.0.0-alpha.13"
-  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.0-alpha.13.tgz#4e5319981497027d1046a688838c28be1a8065b1"
-  integrity sha512-EqZ+9zkuyU2wi9lpwQVHKw8JQThCT6QZ0abqpV/4Rud/9p2DtqkOpo7XmqQQH6UaK0GVXxKd2k4/iThHfsAPkg==
+ringcentral-web-phone@^2.0.0-alpha.14:
+  version "2.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.0-alpha.14.tgz#8b86c5bf534135c10d2bb73f7bb442a940d8dfe0"
+  integrity sha512-cXSEK1yxuubxcImndn537qpGyjunyMF2ZzSSGFGo446FiDFMCY/Uffw1ZDF51PIu2/fxb57B1pO0G6c92PNH6w==
   dependencies:
     blueimp-md5 "^2.19.0"
     sdp-transform "^2.14.2"
