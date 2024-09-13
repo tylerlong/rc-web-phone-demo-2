@@ -8,6 +8,8 @@ import type { ISipClient } from 'ringcentral-web-phone/types';
 const worker = new SharedWorker(new URL('./shared-worker.ts', import.meta.url), { type: 'module' });
 worker.port.start();
 
+// This class will communicate with the shared worker to send and receive SIP messages.
+// The shared worker uses `ringcentral-web-phone/sip-client` to do SIP signaling.
 class SipClient extends EventEmitter implements ISipClient {
   public sipInfo: SipInfoResponse;
   public constructor(sipInfo: SipInfoResponse) {

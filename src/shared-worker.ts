@@ -31,8 +31,12 @@ self.onconnect = (e) => {
         if (sipClient) {
           return; // already inited
         }
+
+        // init sipClient
         sipClient = new SipClient({ sipInfo: e.data.sipInfo, instanceId: uuid(), debug: true });
         sipClient.start();
+
+        // broadcast inboundMessage and outboundMessage to all connected clients
         sipClient.on('inboundMessage', (message) => {
           ports.forEach((p) => p.postMessage({ type: 'inboundMessage', message }));
         });
