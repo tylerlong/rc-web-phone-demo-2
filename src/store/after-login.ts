@@ -2,7 +2,7 @@ import RingCentral from '@rc-ex/core';
 import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
 import WebPhone from 'ringcentral-web-phone';
 import localforage from 'localforage';
-import type { SipInfo } from 'ringcentral-web-phone/utils';
+import type { SipInfo } from 'ringcentral-web-phone/types';
 import hyperid from 'hyperid';
 
 import store from '.';
@@ -58,7 +58,7 @@ const afterLogin = async () => {
   }
   const webPhone = new WebPhone({ sipInfo: sipInfo as SipInfo, instanceId: uuid(), debug: true });
   store.webPhone = webPhone;
-  await webPhone.register();
+  await webPhone.start();
 };
 
 export default afterLogin;
