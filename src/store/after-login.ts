@@ -3,11 +3,9 @@ import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
 import WebPhone from 'ringcentral-web-phone';
 import localforage from 'localforage';
 import type { SipInfo } from 'ringcentral-web-phone/types';
-import hyperid from 'hyperid';
 
 import store from '.';
-
-const uuid = hyperid();
+import SipClient from '../sip-client';
 
 // local utility function
 const trimPrefix = (s: string, prefix: string): string => {
@@ -56,7 +54,10 @@ const afterLogin = async () => {
   } else {
     console.log('Use cached sipInfo');
   }
-  const webPhone = new WebPhone({ sipInfo: sipInfo as SipInfo, instanceId: uuid(), debug: true });
+  const webPhone = new WebPhone({
+    sipInfo: sipInfo as SipInfo,
+    sipClient: new SipClient(sipInfo as SipInfo),
+  });
   store.webPhone = webPhone;
   await webPhone.start();
 };
