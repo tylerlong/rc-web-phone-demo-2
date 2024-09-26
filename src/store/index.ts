@@ -1,14 +1,16 @@
-import { manage } from 'manate';
+import { autoRun, manage } from 'manate';
 import RingCentral from '@rc-ex/core';
 import { message } from 'antd';
 import AuthorizeUriExtension from '@rc-ex/authorize-uri';
 import type GetExtensionInfoResponse from '@rc-ex/core/lib/definitions/GetExtensionInfoResponse';
 import type WebPhone from 'ringcentral-web-phone';
 import type CallSession from 'ringcentral-web-phone/call-session';
+import { debounce } from 'lodash';
 
 import afterLogin from './after-login';
 
 export class Store {
+  public role: 'real' | 'dummy' = 'real';
   public rcToken = '';
   public refreshToken = '';
   public server = 'https://platform.ringcentral.com';
@@ -128,5 +130,34 @@ export class Store {
 }
 
 const store = manage(new Store());
-global.store = store; // for debugging
+
+const worker = new SharedWorker(new URL('../shared-worker.ts', import.meta.url), { type: 'module' });
+worker.port.start();
+window.onbeforeunload = () => worker.port.postMessage({ type: 'close' });
+worker.port.onmessage = (e) => {
+  console.log('message from shared worker', e.data);
+  if (e.data.type === 'role') {
+    store.role = e.data.role;
+  } else if (store.role === 'real' && e.data.type === 'action') {
+    store[e.data.name](...Object.values(e.data.args ?? {}));
+  } else if (store.role === 'dummy' && e.data.type === 'sync') {
+    console.log('salve got sync', e.data.jsonStr);
+    store.webPhone.callSessions = JSON.parse(e.data.jsonStr);
+  }
+};
+const { start } = autoRun(
+  store,
+  () => {
+    if (store.role !== 'real') {
+      return;
+    }
+    const jsonStr = JSON.stringify(store.webPhone.callSessions);
+    console.log('post call sessions to shared worker', jsonStr);
+    worker.port.postMessage({ type: 'sync', jsonStr });
+  },
+  // array.splice will trigger multiple times, we only need the last one
+  (func: () => void) => debounce(func, 1, { leading: false, trailing: true }),
+);
+start();
+
 export default store;

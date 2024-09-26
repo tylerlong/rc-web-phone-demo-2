@@ -1,60 +1,46 @@
-// Ref: https://joshuatz.com/posts/2021/strongly-typed-service-workers/
 /// <reference lib="webworker" />
 
-// sipClient
-import SipClient from 'ringcentral-web-phone/sip-client';
-import hyperid from 'hyperid';
-import OutboundMessage from 'ringcentral-web-phone/sip-message/outbound';
-
-const uuid = hyperid();
-
-// delegate 'ringcentral-web-phone/sip-client' to do the heavy lifting
-let sipClient: SipClient;
-
-// shared worker
 declare let self: SharedWorkerGlobalScope;
-const ports = new Set<MessagePort>();
+const dummyPorts = new Set<MessagePort>();
+let realPort: MessagePort | undefined;
+
+let syncCache: any;
 self.onconnect = (e) => {
+  console.log('port connected');
   const port = e.ports[0];
-  ports.add(port);
-
+  if (realPort) {
+    dummyPorts.add(port);
+    port.postMessage({ type: 'role', role: 'dummy' });
+    if (syncCache) {
+      port.postMessage(syncCache);
+    }
+  } else {
+    realPort = port;
+    port.postMessage({ type: 'role', role: 'real' });
+  }
   port.onmessage = (e) => {
-    switch (e.data.type) {
-      case 'dispose': {
-        ports.delete(port);
-        if (ports.size === 0) {
-          sipClient.dispose();
+    console.log('port message', e.data);
+    if (e.data.type === 'close') {
+      console.log('port closed');
+      if (port === realPort) {
+        realPort = undefined;
+        if (dummyPorts.size > 0) {
+          realPort = Array.from(dummyPorts)[0];
+          dummyPorts.delete(realPort);
+          realPort.postMessage({ type: 'role', role: 'real' });
         }
-        break;
+      } else {
+        dummyPorts.delete(port);
       }
-      case 'sipInfo': {
-        if (sipClient) {
-          return; // already inited
-        }
-
-        // init sipClient
-        sipClient = new SipClient({ sipInfo: e.data.sipInfo, instanceId: uuid(), debug: true });
-        sipClient.start();
-
-        // broadcast inboundMessage and outboundMessage to all connected clients
-        sipClient.on('inboundMessage', (message) => {
-          ports.forEach((p) => p.postMessage({ type: 'inboundMessage', message }));
-        });
-        sipClient.on('outboundMessage', (message) => {
-          ports.forEach((p) => p.postMessage({ type: 'outboundMessage', message }));
-        });
-        break;
+    } else if (e.data.type === 'action') {
+      if (realPort) {
+        console.log('forwarding action to real');
+        realPort.postMessage(e.data);
       }
-      case 'send': {
-        // convert plain object to OutboundMessage instance
-        const outboundMessage = new OutboundMessage();
-        Object.assign(outboundMessage, e.data.message);
-
-        // `sipClient.reply` equals to send and do not wait for response
-        // we don't use `sipClient.request` here because we don't need to wait for response for every outbound message
-        sipClient.reply(outboundMessage);
-        break;
-      }
+    } else if (e.data.type === 'sync') {
+      console.log('forwarding sync to dummies');
+      syncCache = e.data;
+      dummyPorts.forEach((dummyPort) => dummyPort.postMessage(e.data));
     }
   };
 };
