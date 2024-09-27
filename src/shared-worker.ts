@@ -11,16 +11,17 @@ self.onconnect = (e) => {
   if (realPort) {
     dummyPorts.add(port);
     port.postMessage({ type: 'role', role: 'dummy' });
-    if (syncCache) {
-      port.postMessage(syncCache);
-    }
   } else {
     realPort = port;
     port.postMessage({ type: 'role', role: 'real' });
   }
   port.onmessage = (e) => {
     console.log('port message', e.data);
-    if (e.data.type === 'close') {
+    if (e.data.type === 'ready') {
+      if (port !== realPort && syncCache) {
+        port.postMessage(syncCache);
+      }
+    } else if (e.data.type === 'close') {
       console.log('port closed');
       if (port === realPort) {
         realPort = undefined;

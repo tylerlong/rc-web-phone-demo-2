@@ -4,7 +4,7 @@ import { message } from 'antd';
 import AuthorizeUriExtension from '@rc-ex/authorize-uri';
 import type GetExtensionInfoResponse from '@rc-ex/core/lib/definitions/GetExtensionInfoResponse';
 import type WebPhone from 'ringcentral-web-phone';
-import type CallSession from 'ringcentral-web-phone/call-session';
+import CallSession from 'ringcentral-web-phone/call-session';
 import { debounce } from 'lodash';
 
 import afterLogin from './after-login';
@@ -131,7 +131,7 @@ export class Store {
 
 const store = manage(new Store());
 
-const worker = new SharedWorker(new URL('../shared-worker.ts', import.meta.url), { type: 'module' });
+export const worker = new SharedWorker(new URL('../shared-worker.ts', import.meta.url), { type: 'module' });
 worker.port.start();
 window.onbeforeunload = () => worker.port.postMessage({ type: 'close' });
 worker.port.onmessage = (e) => {
@@ -141,8 +141,12 @@ worker.port.onmessage = (e) => {
   } else if (store.role === 'real' && e.data.type === 'action') {
     store[e.data.name](...Object.values(e.data.args ?? {}));
   } else if (store.role === 'dummy' && e.data.type === 'sync') {
-    console.log('salve got sync', e.data.jsonStr);
-    store.webPhone.callSessions = JSON.parse(e.data.jsonStr);
+    console.log('dummy got sync', e.data.jsonStr);
+    store.webPhone.callSessions = JSON.parse(e.data.jsonStr).map((cs) => {
+      const callSession = new CallSession(store.webPhone);
+      Object.assign(callSession, cs);
+      return callSession;
+    });
   }
 };
 const { start } = autoRun(
@@ -151,7 +155,15 @@ const { start } = autoRun(
     if (store.role !== 'real') {
       return;
     }
-    const jsonStr = JSON.stringify(store.webPhone.callSessions);
+    if (!store.webPhone) {
+      return;
+    }
+    const jsonStr = JSON.stringify(store.webPhone.callSessions, (key, value) => {
+      if (key === 'webPhone') {
+        return undefined;
+      }
+      return value;
+    });
     console.log('post call sessions to shared worker', jsonStr);
     worker.port.postMessage({ type: 'sync', jsonStr });
   },
