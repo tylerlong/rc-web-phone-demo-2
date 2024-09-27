@@ -63,7 +63,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
                 <>
                   <Button
                     onClick={() => {
-                      session.transfer(transferToNumber);
+                      store.transfer(session.callId, transferToNumber);
                       setTransferPopoverVisible(false);
                     }}
                   >
@@ -100,7 +100,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
               />
               <Button
                 onClick={() => {
-                  session.flip(flipToNumber);
+                  store.flip(session.callId, flipToNumber);
                   setFlipPopoverVisible(false);
                 }}
               >
@@ -134,7 +134,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
               <Input placeholder="123#" value={dtmfString} onChange={(e) => setDtmfString(e.target.value.trim())} />
               <Button
                 onClick={() => {
-                  session.sendDtmf(dtmfString);
+                  store.sendDtmf(session.callId, dtmfString);
                   setDtmfString('');
                   setDtmfPopoverVisible(false);
                 }}

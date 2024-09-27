@@ -320,6 +320,39 @@ export class Store {
       await store.notice('Call Park Result', JSON.stringify(result));
     }
   }
+
+  public async transfer(callId: string, transferToNumber: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'transfer', args: { callId, transferToNumber } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.transfer(transferToNumber);
+    }
+  }
+
+  public async flip(callId: string, flipToNumber: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'flip', args: { callId, flipToNumber } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.flip(flipToNumber);
+    }
+  }
+
+  public async sendDtmf(callId: string, dtmfString: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'sendDtmf', args: { callId, dtmfString } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      callSession.sendDtmf(dtmfString);
+    }
+  }
 }
 
 const store = manage(new Store());
