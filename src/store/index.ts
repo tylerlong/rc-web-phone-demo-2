@@ -102,13 +102,11 @@ export class Store {
       return;
     }
     const callSession = await this.webPhone.call(targetNumber);
-    callSession.once('answered', async () => {
-      const rc = new RingCentral({ server: this.server });
-      rc.token = { access_token: this.rcToken };
-      await rc.restapi().account().telephony().sessions(confSession.sessionId).parties().bringIn().post({
-        sessionId: callSession.sessionId,
-        partyId: callSession.partyId,
-      });
+    const rc = new RingCentral({ server: this.server });
+    rc.token = { access_token: this.rcToken };
+    await rc.restapi().account().telephony().sessions(confSession.sessionId).parties().bringIn().post({
+      sessionId: callSession.sessionId,
+      partyId: callSession.partyId,
     });
   }
 
