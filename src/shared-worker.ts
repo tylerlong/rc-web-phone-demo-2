@@ -25,6 +25,10 @@ self.onconnect = (e) => {
       console.log('port closed');
       if (port === realPort) {
         realPort = undefined;
+
+        // if real closes, all call sessions are over.
+        dummyPorts.forEach((dummyPort) => dummyPort.postMessage({ type: 'sync', jsonStr: '[]' }));
+
         if (dummyPorts.size > 0) {
           realPort = Array.from(dummyPorts)[0];
           dummyPorts.delete(realPort);
