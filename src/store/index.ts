@@ -142,10 +142,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'hangup', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.hangup();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.hangup();
   }
 
   public async toVoicemail(callId: string) {
@@ -153,10 +150,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'toVoicemail', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await (callSession as InboundCallSession).toVoicemail();
-    }
+    await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).toVoicemail();
   }
 
   public async answer(callId: string) {
@@ -164,10 +158,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'answer', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await (callSession as InboundCallSession).answer();
-    }
+    await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).answer();
   }
 
   public async forward(callId: string, forwardToNumber: string) {
@@ -175,10 +166,9 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'forward', args: { callId, forwardToNumber } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await (callSession as InboundCallSession).forward(forwardToNumber);
-    }
+    await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).forward(
+      forwardToNumber,
+    );
   }
 
   public async startReply(callId: string) {
@@ -186,10 +176,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'startReply', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await (callSession as InboundCallSession).startReply();
-    }
+    await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).startReply();
   }
 
   public async reply(callId: string, replyText: string) {
@@ -197,37 +184,34 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'reply', args: { callId, replyText } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      const response = await (callSession as InboundCallSession).reply(replyText);
-      if (store.role === 'real' && response && response.body.Sts === '0') {
-        const message = `${response.body.Phn} ${response.body.Nm}`;
-        let description = '';
-        switch (response.body.Resp) {
-          case '1':
-            description = 'Yes';
-            break;
-          case '2':
-            description = 'No';
-            break;
-          case '3':
-            description = `Urgent, please call ${response.body.ExtNfo} immediately!`;
-            break;
-          default:
-            break;
-        }
-        await store.notice(message, description);
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId)!;
+    const response = await (callSession as InboundCallSession).reply(replyText);
+    if (store.role === 'real' && response && response.body.Sts === '0') {
+      const message = `${response.body.Phn} ${response.body.Nm}`;
+      let description = '';
+      switch (response.body.Resp) {
+        case '1':
+          description = 'Yes';
+          break;
+        case '2':
+          description = 'No';
+          break;
+        case '3':
+          description = `Urgent, please call ${response.body.ExtNfo} immediately!`;
+          break;
+        default:
+          break;
       }
+      await store.notice(message, description);
     }
   }
 
-  public async notice(message, description) {
+  public async notice(message: string, description: string) {
     global.notifier.info({
       message,
       description,
       duration: 0,
     });
-
     // forward notice to all dummies
     worker.port.postMessage({ type: 'notice', message, description });
   }
@@ -237,10 +221,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'decline', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await (callSession as InboundCallSession).decline();
-    }
+    await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).decline();
   }
 
   public async startRecording(callId: string) {
@@ -248,10 +229,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'startRecording', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.startRecording();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.startRecording();
   }
 
   public async stopRecording(callId: string) {
@@ -259,10 +237,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'stopRecording', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.stopRecording();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.stopRecording();
   }
 
   public async hold(callId: string) {
@@ -270,10 +245,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'hold', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.hold();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.hold();
   }
 
   public async unhold(callId: string) {
@@ -281,10 +253,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'unhold', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.unhold();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.unhold();
   }
 
   public async mute(callId: string) {
@@ -292,10 +261,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'mute', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      callSession.mute();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.mute();
   }
 
   public async unmute(callId: string) {
@@ -303,10 +269,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'unmute', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      callSession.unmute();
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.unmute();
   }
 
   public async park(callId: string) {
@@ -314,11 +277,8 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'park', args: { callId } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      const result = await callSession.park();
-      await store.notice('Call Park Result', JSON.stringify(result));
-    }
+    const result = await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.park();
+    await store.notice('Call Park Result', JSON.stringify(result));
   }
 
   public async transfer(callId: string, transferToNumber: string) {
@@ -326,10 +286,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'transfer', args: { callId, transferToNumber } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.transfer(transferToNumber);
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.transfer(transferToNumber);
   }
 
   public async flip(callId: string, flipToNumber: string) {
@@ -424,7 +381,7 @@ const { start } = autoRun(
     console.log('post call sessions to shared worker', jsonStr);
     worker.port.postMessage({ type: 'sync', jsonStr });
   },
-  // array.splice will trigger multiple times, we only need the last one
+  // why debounce? `array.splice` will trigger multiple times, we only need the last one
   (func: () => void) => debounce(func, 1, { leading: false, trailing: true }),
 );
 start();
