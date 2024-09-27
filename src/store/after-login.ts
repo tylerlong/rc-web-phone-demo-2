@@ -56,6 +56,8 @@ const afterLogin = async () => {
   } else {
     console.log('Use cached sipInfo');
   }
+
+  // this happens when the real app unload (tab closingd, navigate away, etc)
   const { start } = autoRun(store, () => {
     console.log('(re-)create webPhone');
     store.webPhone = new WebPhone({

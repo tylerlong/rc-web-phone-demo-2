@@ -11,7 +11,7 @@ import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound'
 import afterLogin from './after-login';
 
 export class Store {
-  public role: 'real' | 'dummy' = 'real';
+  public role: 'real' | 'dummy' = 'dummy';
   public rcToken = '';
   public refreshToken = '';
   public server = 'https://platform.ringcentral.com';
@@ -92,6 +92,10 @@ export class Store {
 
   // start a new conference
   public async startConference() {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'startConference' });
+      return;
+    }
     const rc = new RingCentral({ server: this.server });
     rc.token = { access_token: this.rcToken };
     const r = await rc.restapi().account().telephony().conference().post();
@@ -100,6 +104,10 @@ export class Store {
 
   // invite a number to an existing conference
   public async inviteToConference(targetNumber: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'inviteToConference', args: { targetNumber } });
+      return;
+    }
     const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
     if (!confSession) {
       return;
@@ -116,13 +124,18 @@ export class Store {
   }
 
   // merge an existing call session to an existing conference
-  public async mergeToConference(callSession: CallSession) {
+  public async mergeToConference(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'mergeToConference', args: { callId } });
+      return;
+    }
     const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
     if (!confSession) {
       return;
     }
     const rc = new RingCentral({ server: this.server });
     rc.token = { access_token: this.rcToken };
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId)!;
     await rc.restapi().account().telephony().sessions(confSession.sessionId).parties().bringIn().post({
       sessionId: callSession.sessionId,
       partyId: callSession.partyId,
@@ -361,6 +374,9 @@ worker.port.onmessage = (e) => {
       description: e.data.description,
       duration: 0,
     });
+  } else if (store.role === 'dummy' && e.data.type === 'tokens') {
+    store.rcToken = e.data.rcToken;
+    store.refreshToken = e.data.refreshToken;
   }
 };
 const { start } = autoRun(

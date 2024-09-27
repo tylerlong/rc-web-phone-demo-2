@@ -150,7 +150,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
       {!session.isConference && store.webPhone.callSessions.find((s) => s.isConference) && (
         <Button
           onClick={() => {
-            store.mergeToConference(session);
+            store.mergeToConference(session.callId);
           }}
         >
           Merge to Conference

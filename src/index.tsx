@@ -14,4 +14,5 @@ root.render(
   </StrictMode>,
 );
 
-init();
+// wait for shared worker to tell the first tab that he is real instead of dummy
+setTimeout(() => init(), 100);

@@ -49,6 +49,9 @@ self.onconnect = (e) => {
     } else if (e.data.type === 'notice') {
       console.log('forwarding notice to dummies');
       dummyPorts.forEach((dummyPort) => dummyPort.postMessage(e.data));
+    } else if (e.data.type === 'tokens') {
+      console.log('forwarding tokens to dummies');
+      dummyPorts.forEach((dummyPort) => dummyPort.postMessage(e.data));
     }
   };
 };

@@ -4,6 +4,7 @@ import localforage from 'localforage';
 
 import store from '.';
 import afterLogin from './after-login';
+import { worker } from '.';
 
 const init = async () => {
   // load credentials from local
@@ -37,15 +38,22 @@ const init = async () => {
         await rc.refresh();
         store.rcToken = rc.token!.access_token!;
         store.refreshToken = rc.token!.refresh_token!;
+        worker.port.postMessage({ type: 'tokens', rcToken: store.rcToken, refreshToken: store.refreshToken });
       } catch (ignoreErr) {
         store.rcToken = '';
         store.refreshToken = '';
       }
     }
   };
-  // auto refresh token every 30 minutes
-  await refreshToken();
-  setInterval(() => refreshToken(), 30 * 60 * 1000);
+
+  const tokenRefresher = autoRun(store, async () => {
+    if (store.role === 'real') {
+      // this happens when a dummy becomes real
+      refreshToken();
+      setInterval(() => refreshToken(), 30 * 60 * 1000);
+    }
+  });
+  tokenRefresher.start();
 
   // in case there is a valid token from local storage
   afterLogin();
