@@ -5,12 +5,9 @@ import localforage from 'localforage';
 import type { SipInfo } from 'ringcentral-web-phone/types';
 import { autoRun } from 'manate';
 import SipClient from 'ringcentral-web-phone/sip-client';
-import hyperid from 'hyperid';
 
 import store, { worker } from '.';
 import DummySipClient from '../dummy-sip-client';
-
-const uuid = hyperid();
 
 // local utility function
 const trimPrefix = (s: string, prefix: string): string => {
@@ -64,9 +61,7 @@ const afterLogin = async () => {
     store.webPhone = new WebPhone({
       sipInfo: sipInfo as SipInfo,
       sipClient:
-        store.role === 'real'
-          ? new SipClient({ sipInfo: sipInfo as SipInfo, instanceId: uuid(), debug: true })
-          : new DummySipClient(),
+        store.role === 'real' ? new SipClient({ sipInfo: sipInfo as SipInfo, debug: true }) : new DummySipClient(),
     });
     store.webPhone.start();
   });
