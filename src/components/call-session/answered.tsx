@@ -71,7 +71,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
                   </Button>
                   <Button
                     onClick={async () => {
-                      const { complete, cancel } = await session.warmTransfer(transferToNumber);
+                      const { complete, cancel } = await store.warmTransfer(session.callId, transferToNumber);
                       setWarmTransferMethods({ complete, cancel });
                     }}
                   >

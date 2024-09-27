@@ -337,10 +337,7 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'flip', args: { callId, flipToNumber } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      await callSession.flip(flipToNumber);
-    }
+    await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.flip(flipToNumber);
   }
 
   public async sendDtmf(callId: string, dtmfString: string) {
@@ -348,10 +345,38 @@ export class Store {
       worker.port.postMessage({ type: 'action', name: 'sendDtmf', args: { callId, dtmfString } });
       return;
     }
-    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
-    if (callSession) {
-      callSession.sendDtmf(dtmfString);
+    this.webPhone.callSessions.find((cs) => cs.callId === callId)!.sendDtmf(dtmfString);
+  }
+
+  public async warmTransfer(
+    callId: string,
+    transferToNumber: string,
+  ): Promise<{
+    complete: () => Promise<void>;
+    cancel: () => Promise<void>;
+  }> {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'warmTransfer', args: { callId, transferToNumber } });
+      return {
+        complete: async () => {
+          worker.port.postMessage({ type: 'action', name: 'warmTransferComplete', args: { callId } });
+        },
+        cancel: async () => {
+          worker.port.postMessage({ type: 'action', name: 'warmTransferCancel', args: { callId } });
+        },
+      };
     }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId)!;
+    const { complete, cancel } = await callSession.warmTransfer(transferToNumber);
+    (callSession as any).warmTransferComplete = complete;
+    (callSession as any).warmTransferCancel = cancel;
+    return { complete, cancel };
+  }
+  public async warmTransferComplete(callId: string) {
+    (this.webPhone.callSessions.find((cs) => cs.callId === callId) as any).warmTransferComplete();
+  }
+  public async warmTransferCancel(callId: string) {
+    (this.webPhone.callSessions.find((cs) => cs.callId === callId) as any).warmTransferCancel();
   }
 }
 
