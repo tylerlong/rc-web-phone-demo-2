@@ -112,12 +112,12 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           <Button>Flip</Button>
         </Popover>
       )}
-      <Button onClick={() => session.startRecording()}>Start Recording</Button>
-      <Button onClick={() => session.stopRecording()}>Stop Recording</Button>
+      <Button onClick={() => store.startRecording(session.callId)}>Start Recording</Button>
+      <Button onClick={() => store.stopRecording(session.callId)}>Stop Recording</Button>
       {!session.isConference && (
         <>
-          <Button onClick={() => session.hold()}>Hold</Button>
-          <Button onClick={() => session.unhold()}>Unhold</Button>
+          <Button onClick={() => store.hold(session.callId)}>Hold</Button>
+          <Button onClick={() => store.unhold(session.callId)}>Unhold</Button>
         </>
       )}
       <Button onClick={() => session.mute()}>Mute</Button>

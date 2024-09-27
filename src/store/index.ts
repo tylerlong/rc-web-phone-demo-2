@@ -242,6 +242,50 @@ export class Store {
       await (callSession as InboundCallSession).decline();
     }
   }
+
+  public async startRecording(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'startRecording', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.startRecording();
+    }
+  }
+
+  public async stopRecording(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'stopRecording', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.stopRecording();
+    }
+  }
+
+  public async hold(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'hold', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.hold();
+    }
+  }
+
+  public async unhold(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'unhold', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.unhold();
+    }
+  }
 }
 
 const store = manage(new Store());
