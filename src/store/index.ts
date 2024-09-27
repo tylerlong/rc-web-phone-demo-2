@@ -216,7 +216,7 @@ export class Store {
           default:
             break;
         }
-        store.notice(message, description);
+        await store.notice(message, description);
       }
     }
   }
@@ -284,6 +284,40 @@ export class Store {
     const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
     if (callSession) {
       await callSession.unhold();
+    }
+  }
+
+  public async mute(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'mute', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      callSession.mute();
+    }
+  }
+
+  public async unmute(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'unmute', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      callSession.unmute();
+    }
+  }
+
+  public async park(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'park', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      const result = await callSession.park();
+      await store.notice('Call Park Result', JSON.stringify(result));
     }
   }
 }

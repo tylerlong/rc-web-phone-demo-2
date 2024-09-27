@@ -120,22 +120,9 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           <Button onClick={() => store.unhold(session.callId)}>Unhold</Button>
         </>
       )}
-      <Button onClick={() => session.mute()}>Mute</Button>
-      <Button onClick={() => session.unmute()}>Unmute</Button>
-      {!session.isConference && (
-        <Button
-          onClick={async () => {
-            const result = await session.park();
-            global.notifier.info({
-              message: 'Call Park Result',
-              description: <pre>{JSON.stringify(result, null, 2)}</pre>,
-              duration: 10,
-            });
-          }}
-        >
-          Park
-        </Button>
-      )}
+      <Button onClick={() => store.mute(session.callId)}>Mute</Button>
+      <Button onClick={() => store.unmute(session.callId)}>Unmute</Button>
+      {!session.isConference && <Button onClick={async () => store.park(session.callId)}>Park</Button>}
       {!session.isConference && (
         <Popover
           open={dtmfPopoverVisible}
