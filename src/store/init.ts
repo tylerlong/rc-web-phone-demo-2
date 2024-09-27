@@ -1,6 +1,7 @@
 import RingCentral from '@rc-ex/core';
 import { autoRun } from 'manate';
 import localforage from 'localforage';
+import type { ManateEvent } from 'manate/models';
 
 import store from '.';
 import afterLogin from './after-login';
@@ -46,14 +47,17 @@ const init = async () => {
     }
   };
 
-  const tokenRefresher = autoRun(store, async () => {
-    if (store.role === 'real') {
+  if (store.role === 'real') {
+    await refreshToken();
+    setInterval(() => refreshToken(), 30 * 60 * 1000);
+  }
+  store.$e.on((event: ManateEvent) => {
+    if (event.name === 'set' && event.pathString === 'role' && store.role === 'real') {
       // this happens when a dummy becomes real
       refreshToken();
       setInterval(() => refreshToken(), 30 * 60 * 1000);
     }
   });
-  tokenRefresher.start();
 
   // in case there is a valid token from local storage
   afterLogin();
