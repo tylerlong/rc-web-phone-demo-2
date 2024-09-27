@@ -56,7 +56,7 @@ const Phone = auto((props: { store: Managed<Store> }) => {
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button
                 type="primary"
-                onClick={() => store.webPhone.call(callee, callerId)}
+                onClick={() => store.call(callee, callerId)}
                 disabled={callee.trim().length < 3}
                 block
               >

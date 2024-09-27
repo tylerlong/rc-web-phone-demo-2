@@ -6,6 +6,7 @@ import type GetExtensionInfoResponse from '@rc-ex/core/lib/definitions/GetExtens
 import type WebPhone from 'ringcentral-web-phone';
 import CallSession from 'ringcentral-web-phone/call-session';
 import { debounce } from 'lodash';
+import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound';
 
 import afterLogin from './after-login';
 
@@ -127,6 +128,120 @@ export class Store {
       partyId: callSession.partyId,
     });
   }
+
+  public async call(callee: string, callerId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'call', args: { callee, callerId } });
+      return;
+    }
+    await this.webPhone.call(callee, callerId);
+  }
+
+  public async hangup(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'hangup', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await callSession.hangup();
+    }
+  }
+
+  public async toVoicemail(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'toVoicemail', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await (callSession as InboundCallSession).toVoicemail();
+    }
+  }
+
+  public async answer(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'answer', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await (callSession as InboundCallSession).answer();
+    }
+  }
+
+  public async forward(callId: string, forwardToNumber: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'forward', args: { callId, forwardToNumber } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await (callSession as InboundCallSession).forward(forwardToNumber);
+    }
+  }
+
+  public async startReply(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'startReply', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await (callSession as InboundCallSession).startReply();
+    }
+  }
+
+  public async reply(callId: string, replyText: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'reply', args: { callId, replyText } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      const response = await (callSession as InboundCallSession).reply(replyText);
+      if (store.role === 'real' && response && response.body.Sts === '0') {
+        const message = `${response.body.Phn} ${response.body.Nm}`;
+        let description = '';
+        switch (response.body.Resp) {
+          case '1':
+            description = 'Yes';
+            break;
+          case '2':
+            description = 'No';
+            break;
+          case '3':
+            description = `Urgent, please call ${response.body.ExtNfo} immediately!`;
+            break;
+          default:
+            break;
+        }
+        store.notice(message, description);
+      }
+    }
+  }
+
+  public async notice(message, description) {
+    global.notifier.info({
+      message,
+      description,
+      duration: 0,
+    });
+
+    // forward notice to all dummies
+    worker.port.postMessage({ type: 'notice', message, description });
+  }
+
+  public async decline(callId: string) {
+    if (this.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: 'decline', args: { callId } });
+      return;
+    }
+    const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId);
+    if (callSession) {
+      await (callSession as InboundCallSession).decline();
+    }
+  }
 }
 
 const store = manage(new Store());
@@ -146,6 +261,12 @@ worker.port.onmessage = (e) => {
       const callSession = new CallSession(store.webPhone);
       Object.assign(callSession, cs);
       return callSession;
+    });
+  } else if (store.role === 'dummy' && e.data.type === 'notice') {
+    global.notifier.info({
+      message: e.data.message,
+      description: e.data.description,
+      duration: 0,
     });
   }
 };

@@ -20,7 +20,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
   >(undefined);
   return (
     <Space>
-      <Button onClick={() => session.hangup()} danger>
+      <Button onClick={() => store.hangup(session.callId)} danger>
         {session.isConference ? 'End Conference' : 'Hang up'}
       </Button>
       {!session.isConference && (

@@ -4,6 +4,7 @@ import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound'
 import { auto } from 'manate/react';
 
 import AnsweredSession from './answered';
+import store from '../../store';
 
 const InboundSession = auto((props: { session: InboundCallSession }) => {
   const { session } = props;
@@ -22,10 +23,10 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
       </Space>
       {session.state === 'ringing' ? (
         <Space>
-          <Button onClick={() => session.answer()} type="primary">
+          <Button onClick={() => store.answer(session.callId)} type="primary">
             Answer
           </Button>
-          <Button onClick={() => session.toVoicemail()}>To Voicemail</Button>
+          <Button onClick={() => store.toVoicemail(session.callId)}>To Voicemail</Button>
           <Popover
             open={forwardPopoverVisible}
             onOpenChange={(visible) => setForwardPopoverVisible(visible)}
@@ -40,7 +41,7 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
                 />
                 <Button
                   onClick={() => {
-                    session.forward(forwardToNumber);
+                    store.forward(session.callId, forwardToNumber);
                     setForwardPopoverVisible(false);
                   }}
                 >
@@ -56,7 +57,7 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
             onOpenChange={(visible) => {
               setReplyPopoverVisible(visible);
               if (visible) {
-                session.startReply();
+                store.startReply(session.callId);
               }
             }}
             trigger="click"
@@ -71,29 +72,7 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
                 <Button
                   onClick={async () => {
                     setReplyPopoverVisible(false);
-                    const response = await session.reply(replyText);
-                    if (response.body.Sts === '0') {
-                      const message = `${response.body.Phn} ${response.body.Nm}`;
-                      let description = '';
-                      switch (response.body.Resp) {
-                        case '1':
-                          description = 'Yes';
-                          break;
-                        case '2':
-                          description = 'No';
-                          break;
-                        case '3':
-                          description = `Urgent, please call ${response.body.ExtNfo} immediately!`;
-                          break;
-                        default:
-                          break;
-                      }
-                      global.notifier.info({
-                        message, // who replied
-                        description, // what replied
-                        duration: 0,
-                      });
-                    }
+                    await store.reply(session.callId, replyText);
                   }}
                 >
                   Reply
@@ -103,7 +82,7 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
           >
             <Button>Reply</Button>
           </Popover>
-          <Button onClick={() => session.decline()} danger>
+          <Button onClick={() => store.decline(session.callId)} danger>
             Decline
           </Button>
         </Space>

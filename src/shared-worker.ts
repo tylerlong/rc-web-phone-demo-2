@@ -42,6 +42,9 @@ self.onconnect = (e) => {
       console.log('forwarding sync to dummies');
       syncCache = e.data;
       dummyPorts.forEach((dummyPort) => dummyPort.postMessage(e.data));
+    } else if (e.data.type === 'notice') {
+      console.log('forwarding notice to dummies');
+      dummyPorts.forEach((dummyPort) => dummyPort.postMessage(e.data));
     }
   };
 };
