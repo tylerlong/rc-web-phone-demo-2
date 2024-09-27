@@ -4,10 +4,9 @@ import WebPhone from 'ringcentral-web-phone';
 import localforage from 'localforage';
 import type { SipInfo } from 'ringcentral-web-phone/types';
 import { autoRun } from 'manate';
-import SipClient from 'ringcentral-web-phone/sip-client';
+import SipClient, { DummySipClient } from 'ringcentral-web-phone/sip-client';
 
 import store, { worker } from '.';
-import DummySipClient from '../dummy-sip-client';
 
 // local utility function
 const trimPrefix = (s: string, prefix: string): string => {
