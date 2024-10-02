@@ -1,5 +1,5 @@
 import RingCentral from '@rc-ex/core';
-import { autoRun } from 'manate';
+import { autoRun, $ } from 'manate';
 import localforage from 'localforage';
 import type { ManateEvent } from 'manate/models';
 
@@ -51,7 +51,7 @@ const init = async () => {
     await refreshToken();
     setInterval(() => refreshToken(), 30 * 60 * 1000);
   }
-  store.$e.on((event: ManateEvent) => {
+  $(store).on((event: ManateEvent) => {
     if (event.name === 'set' && event.pathString === 'role' && store.role === 'real') {
       // this happens when a dummy becomes real
       refreshToken();

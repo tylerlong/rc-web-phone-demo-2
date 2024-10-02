@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { auto } from 'manate/react';
 import { Button, Divider, Empty, Form, Input, Select, Space, Typography } from 'antd';
-import type { Managed } from 'manate/models';
 import { autoRun } from 'manate';
 
 import type { Store } from '../store';
 import CallSession from './call-session';
 
-const Phone = auto((props: { store: Managed<Store> }) => {
+const Phone = auto((props: { store: Store }) => {
   const { store } = props;
   const [callee, setCallee] = React.useState<string>('');
   const [callerId, setCallerId] = React.useState<string>('');
