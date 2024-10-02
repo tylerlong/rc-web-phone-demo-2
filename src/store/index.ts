@@ -9,13 +9,21 @@ import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound'
 
 import afterLogin from './after-login';
 
-// real will not sync state to dummy when transaction is in progress
-// this prevent sending temporary state to dummy
-function transaction(value: any) {
+function actionWrapper(value: Function, context: ClassMethodDecoratorContext) {
   return async function (...args: any[]) {
-    $(store).begin();
+    // dummy
+    // forwards action to shared worker
+    if (store.role === 'dummy') {
+      worker.port.postMessage({ type: 'action', name: context.name, args });
+      return;
+    }
+
+    // real
+    // real will not sync state to dummy when transaction is in progress
+    // this prevent sending temporary state to dummy
+    $(store).begin(); // begin transaction
     const result = await value.apply(this, args);
-    $(store).commit();
+    $(store).commit(); // commit transaction
     return result;
   };
 }
@@ -101,12 +109,8 @@ export class Store {
   }
 
   // start a new conference
-  @transaction
+  @actionWrapper
   public async startConference() {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'startConference' });
-      return;
-    }
     const rc = new RingCentral({ server: this.server });
     rc.token = { access_token: this.rcToken };
     const r = await rc.restapi().account().telephony().conference().post();
@@ -114,12 +118,8 @@ export class Store {
   }
 
   // invite a number to an existing conference
-  @transaction
+  @actionWrapper
   public async inviteToConference(targetNumber: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'inviteToConference', args: { targetNumber } });
-      return;
-    }
     const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
     if (!confSession) {
       return;
@@ -135,10 +135,6 @@ export class Store {
 
   // merge an existing call session to an existing conference
   public async mergeToConference(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'mergeToConference', args: { callId } });
-      return;
-    }
     const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
     if (!confSession) {
       return;
@@ -152,68 +148,40 @@ export class Store {
     });
   }
 
-  @transaction
+  @actionWrapper
   public async call(callee: string, callerId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'call', args: { callee, callerId } });
-      return;
-    }
     await this.webPhone.call(callee, callerId);
   }
 
-  @transaction
+  @actionWrapper
   public async hangup(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'hangup', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.hangup();
   }
 
-  @transaction
+  @actionWrapper
   public async toVoicemail(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'toVoicemail', args: { callId } });
-      return;
-    }
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).toVoicemail();
   }
 
-  @transaction
+  @actionWrapper
   public async answer(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'answer', args: { callId } });
-      return;
-    }
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).answer();
   }
 
-  @transaction
+  @actionWrapper
   public async forward(callId: string, forwardToNumber: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'forward', args: { callId, forwardToNumber } });
-      return;
-    }
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).forward(
       forwardToNumber,
     );
   }
 
-  @transaction
+  @actionWrapper
   public async startReply(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'startReply', args: { callId } });
-      return;
-    }
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).startReply();
   }
 
-  @transaction
+  @actionWrapper
   public async reply(callId: string, replyText: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'reply', args: { callId, replyText } });
-      return;
-    }
     const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId)!;
     const response = await (callSession as InboundCallSession).reply(replyText);
     if (store.role === 'real' && response && response.body.Sts === '0') {
@@ -246,107 +214,62 @@ export class Store {
     worker.port.postMessage({ type: 'notice', message, description });
   }
 
-  @transaction
+  @actionWrapper
   public async decline(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'decline', args: { callId } });
-      return;
-    }
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).decline();
   }
 
-  @transaction
+  @actionWrapper
   public async startRecording(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'startRecording', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.startRecording();
   }
 
-  @transaction
+  @actionWrapper
   public async stopRecording(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'stopRecording', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.stopRecording();
   }
 
-  @transaction
+  @actionWrapper
   public async hold(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'hold', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.hold();
   }
 
-  @transaction
+  @actionWrapper
   public async unhold(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'unhold', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.unhold();
   }
 
-  @transaction
+  @actionWrapper
   public async mute(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'mute', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.mute();
   }
 
-  @transaction
+  @actionWrapper
   public async unmute(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'unmute', args: { callId } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.unmute();
   }
 
-  @transaction
+  @actionWrapper
   public async park(callId: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'park', args: { callId } });
-      return;
-    }
     const result = await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.park();
     await store.notice('Call Park Result', JSON.stringify(result));
   }
 
-  @transaction
+  @actionWrapper
   public async transfer(callId: string, transferToNumber: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'transfer', args: { callId, transferToNumber } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.transfer(transferToNumber);
   }
 
-  @transaction
+  @actionWrapper
   public async flip(callId: string, flipToNumber: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'flip', args: { callId, flipToNumber } });
-      return;
-    }
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.flip(flipToNumber);
   }
 
-  @transaction
+  @actionWrapper
   public async sendDtmf(callId: string, dtmfString: string) {
-    if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'sendDtmf', args: { callId, dtmfString } });
-      return;
-    }
     this.webPhone.callSessions.find((cs) => cs.callId === callId)!.sendDtmf(dtmfString);
   }
 
-  @transaction
   public async warmTransfer(
     callId: string,
     transferToNumber: string,
@@ -355,27 +278,30 @@ export class Store {
     cancel: () => Promise<void>;
   }> {
     if (this.role === 'dummy') {
-      worker.port.postMessage({ type: 'action', name: 'warmTransfer', args: { callId, transferToNumber } });
+      worker.port.postMessage({ type: 'action', name: 'warmTransfer', args: [callId, transferToNumber] });
       return {
         complete: async () => {
-          worker.port.postMessage({ type: 'action', name: 'warmTransferComplete', args: { callId } });
+          worker.port.postMessage({ type: 'action', name: 'warmTransferComplete', args: [callId] });
         },
         cancel: async () => {
-          worker.port.postMessage({ type: 'action', name: 'warmTransferCancel', args: { callId } });
+          worker.port.postMessage({ type: 'action', name: 'warmTransferCancel', args: [callId] });
         },
       };
     }
+    $(store).begin(); // begin transaction
+    console.log(this.webPhone.callSessions.map((cs) => cs.callId));
     const callSession = this.webPhone.callSessions.find((cs) => cs.callId === callId)!;
     const { complete, cancel } = await callSession.warmTransfer(transferToNumber);
     (callSession as any).warmTransferComplete = complete;
     (callSession as any).warmTransferCancel = cancel;
+    $(store).commit(); // commit transaction
     return { complete, cancel };
   }
-  @transaction
+  @actionWrapper
   public async warmTransferComplete(callId: string) {
     (this.webPhone.callSessions.find((cs) => cs.callId === callId) as any).warmTransferComplete();
   }
-  @transaction
+  @actionWrapper
   public async warmTransferCancel(callId: string) {
     (this.webPhone.callSessions.find((cs) => cs.callId === callId) as any).warmTransferCancel();
   }
@@ -391,7 +317,7 @@ worker.port.onmessage = (e) => {
   if (e.data.type === 'role') {
     store.role = e.data.role;
   } else if (store.role === 'real' && e.data.type === 'action') {
-    store[e.data.name](...Object.values(e.data.args ?? {}));
+    store[e.data.name](...e.data.args);
   } else if (store.role === 'dummy' && e.data.type === 'sync') {
     console.log('dummy got sync', e.data.jsonStr);
     store.webPhone.callSessions = JSON.parse(e.data.jsonStr).map((cs) => {
