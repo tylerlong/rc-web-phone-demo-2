@@ -11,6 +11,7 @@ module.exports = {
         caughtErrorsIgnorePattern: '^ignoreErr$',
       },
     ],
+    '@typescript-eslint/no-invalid-this': 'off',
   },
   settings: {
     react: {

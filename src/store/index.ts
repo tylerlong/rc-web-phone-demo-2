@@ -11,11 +11,10 @@ import afterLogin from './after-login';
 
 // real will not sync state to dummy when transaction is in progress
 // this prevent sending temporary state to dummy
-function transaction(target: Store, propertyKey: PropertyKey, descriptor: PropertyDescriptor) {
-  const originalMethod = descriptor.value;
-  descriptor.value = async function (...args: any[]) {
+function transaction(value: any) {
+  return async function (...args: any[]) {
     $(store).begin();
-    const result = await originalMethod.apply(this, args);
+    const result = await value.apply(this, args);
     $(store).commit();
     return result;
   };
