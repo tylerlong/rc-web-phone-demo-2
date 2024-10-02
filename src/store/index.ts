@@ -1,14 +1,25 @@
-import { autoRun, manage } from 'manate';
+import { autoRun, manage, $ } from 'manate';
 import RingCentral from '@rc-ex/core';
 import { message } from 'antd';
 import AuthorizeUriExtension from '@rc-ex/authorize-uri';
 import type GetExtensionInfoResponse from '@rc-ex/core/lib/definitions/GetExtensionInfoResponse';
 import type WebPhone from 'ringcentral-web-phone';
 import CallSession from 'ringcentral-web-phone/call-session';
-import { debounce } from 'lodash';
 import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound';
 
 import afterLogin from './after-login';
+
+// real will not sync state to dummy when transaction is in progress
+// this prevent sending temporary state to dummy
+function transaction(target: Store, propertyKey: PropertyKey, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  descriptor.value = async function (...args: any[]) {
+    $(store).begin();
+    const result = await originalMethod.apply(this, args);
+    $(store).commit();
+    return result;
+  };
+}
 
 export class Store {
   public role: 'real' | 'dummy' = 'dummy';
@@ -91,6 +102,7 @@ export class Store {
   }
 
   // start a new conference
+  @transaction
   public async startConference() {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'startConference' });
@@ -103,6 +115,7 @@ export class Store {
   }
 
   // invite a number to an existing conference
+  @transaction
   public async inviteToConference(targetNumber: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'inviteToConference', args: { targetNumber } });
@@ -140,6 +153,7 @@ export class Store {
     });
   }
 
+  @transaction
   public async call(callee: string, callerId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'call', args: { callee, callerId } });
@@ -148,6 +162,7 @@ export class Store {
     await this.webPhone.call(callee, callerId);
   }
 
+  @transaction
   public async hangup(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'hangup', args: { callId } });
@@ -156,6 +171,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.hangup();
   }
 
+  @transaction
   public async toVoicemail(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'toVoicemail', args: { callId } });
@@ -164,6 +180,7 @@ export class Store {
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).toVoicemail();
   }
 
+  @transaction
   public async answer(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'answer', args: { callId } });
@@ -172,6 +189,7 @@ export class Store {
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).answer();
   }
 
+  @transaction
   public async forward(callId: string, forwardToNumber: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'forward', args: { callId, forwardToNumber } });
@@ -182,6 +200,7 @@ export class Store {
     );
   }
 
+  @transaction
   public async startReply(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'startReply', args: { callId } });
@@ -190,6 +209,7 @@ export class Store {
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).startReply();
   }
 
+  @transaction
   public async reply(callId: string, replyText: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'reply', args: { callId, replyText } });
@@ -227,6 +247,7 @@ export class Store {
     worker.port.postMessage({ type: 'notice', message, description });
   }
 
+  @transaction
   public async decline(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'decline', args: { callId } });
@@ -235,6 +256,7 @@ export class Store {
     await (this.webPhone.callSessions.find((cs) => cs.callId === callId) as InboundCallSession).decline();
   }
 
+  @transaction
   public async startRecording(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'startRecording', args: { callId } });
@@ -243,6 +265,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.startRecording();
   }
 
+  @transaction
   public async stopRecording(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'stopRecording', args: { callId } });
@@ -251,6 +274,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.stopRecording();
   }
 
+  @transaction
   public async hold(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'hold', args: { callId } });
@@ -259,6 +283,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.hold();
   }
 
+  @transaction
   public async unhold(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'unhold', args: { callId } });
@@ -267,6 +292,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.unhold();
   }
 
+  @transaction
   public async mute(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'mute', args: { callId } });
@@ -275,6 +301,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.mute();
   }
 
+  @transaction
   public async unmute(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'unmute', args: { callId } });
@@ -283,6 +310,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.unmute();
   }
 
+  @transaction
   public async park(callId: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'park', args: { callId } });
@@ -292,6 +320,7 @@ export class Store {
     await store.notice('Call Park Result', JSON.stringify(result));
   }
 
+  @transaction
   public async transfer(callId: string, transferToNumber: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'transfer', args: { callId, transferToNumber } });
@@ -300,6 +329,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.transfer(transferToNumber);
   }
 
+  @transaction
   public async flip(callId: string, flipToNumber: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'flip', args: { callId, flipToNumber } });
@@ -308,6 +338,7 @@ export class Store {
     await this.webPhone.callSessions.find((cs) => cs.callId === callId)!.flip(flipToNumber);
   }
 
+  @transaction
   public async sendDtmf(callId: string, dtmfString: string) {
     if (this.role === 'dummy') {
       worker.port.postMessage({ type: 'action', name: 'sendDtmf', args: { callId, dtmfString } });
@@ -316,6 +347,7 @@ export class Store {
     this.webPhone.callSessions.find((cs) => cs.callId === callId)!.sendDtmf(dtmfString);
   }
 
+  @transaction
   public async warmTransfer(
     callId: string,
     transferToNumber: string,
@@ -340,9 +372,11 @@ export class Store {
     (callSession as any).warmTransferCancel = cancel;
     return { complete, cancel };
   }
+  @transaction
   public async warmTransferComplete(callId: string) {
     (this.webPhone.callSessions.find((cs) => cs.callId === callId) as any).warmTransferComplete();
   }
+  @transaction
   public async warmTransferCancel(callId: string) {
     (this.webPhone.callSessions.find((cs) => cs.callId === callId) as any).warmTransferCancel();
   }
@@ -377,27 +411,22 @@ worker.port.onmessage = (e) => {
     store.refreshToken = e.data.refreshToken;
   }
 };
-const { start } = autoRun(
-  store,
-  () => {
-    if (store.role !== 'real') {
-      return;
+const { start } = autoRun(store, () => {
+  if (store.role !== 'real') {
+    return;
+  }
+  if (!store.webPhone) {
+    return;
+  }
+  const jsonStr = JSON.stringify(store.webPhone.callSessions, (key, value) => {
+    if (key === 'webPhone') {
+      return undefined;
     }
-    if (!store.webPhone) {
-      return;
-    }
-    const jsonStr = JSON.stringify(store.webPhone.callSessions, (key, value) => {
-      if (key === 'webPhone') {
-        return undefined;
-      }
-      return value;
-    });
-    console.log('post call sessions to shared worker', jsonStr);
-    worker.port.postMessage({ type: 'sync', jsonStr });
-  },
-  // why debounce? `array.splice` will trigger multiple times, we only need the last one
-  (func: () => void) => debounce(func, 1, { leading: false, trailing: true }),
-);
+    return value;
+  });
+  console.log('post call sessions to shared worker', jsonStr);
+  worker.port.postMessage({ type: 'sync', jsonStr });
+});
 start();
 
 export default store;

@@ -3,7 +3,8 @@ import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
 import WebPhone from 'ringcentral-web-phone';
 import localforage from 'localforage';
 import type { SipInfo } from 'ringcentral-web-phone/types';
-import { autoRun } from 'manate';
+import type { ManateEvent } from 'manate';
+import { $ } from 'manate';
 import SipClient, { DummySipClient } from 'ringcentral-web-phone/sip-client';
 
 import store, { worker } from '.';
@@ -56,8 +57,7 @@ const afterLogin = async () => {
     console.log('Use cached sipInfo');
   }
 
-  // this happens when the real app unload (tab closingd, navigate away, etc)
-  const { start } = autoRun(store, () => {
+  const createWebPhone = () => {
     console.log('(re-)create webPhone');
     store.webPhone = new WebPhone({
       sipInfo: sipInfo as SipInfo,
@@ -65,8 +65,15 @@ const afterLogin = async () => {
         store.role === 'real' ? new SipClient({ sipInfo: sipInfo as SipInfo, debug: true }) : new DummySipClient(),
     });
     store.webPhone.start();
+  };
+  createWebPhone();
+
+  // this happens when dummy is promoted to real
+  $(store).on((e: ManateEvent) => {
+    if (e.name === 'set' && e.pathString === 'role' && store.role === 'real') {
+      createWebPhone();
+    }
   });
-  start();
 
   worker.port.postMessage({ type: 'ready' });
 };
