@@ -1,7 +1,7 @@
 import { Button, Input, Popover, Space } from 'antd';
+import { auto } from 'manate/react';
 import React, { useState } from 'react';
 import type CallSession from 'ringcentral-web-phone/call-session';
-import { auto } from 'manate/react';
 
 import store from '../../store';
 
@@ -13,7 +13,8 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
   const [flipToNumber, setFlipToNumber] = useState('');
   const [dtmfPopoverVisible, setDtmfPopoverVisible] = useState(false);
   const [dtmfString, setDtmfString] = useState('');
-  const [inviteToConfPopoverVisible, setInviteToConfPopoverVisible] = useState(false);
+  const [inviteToConfPopoverVisible, setInviteToConfPopoverVisible] =
+    useState(false);
   const [inviteToConfNumber, setInviteToConfNumber] = useState('');
   const [warmTransferMethods, setWarmTransferMethods] = useState<
     undefined | { complete: () => void; cancel: () => void }
@@ -71,7 +72,8 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
                   </Button>
                   <Button
                     onClick={async () => {
-                      const { complete, cancel } = await session.warmTransfer(transferToNumber);
+                      const { complete, cancel } =
+                        await session.warmTransfer(transferToNumber);
                       setWarmTransferMethods({ complete, cancel });
                     }}
                   >
@@ -144,7 +146,11 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           placement="top"
           content={
             <Space direction="vertical">
-              <Input placeholder="123#" value={dtmfString} onChange={(e) => setDtmfString(e.target.value.trim())} />
+              <Input
+                placeholder="123#"
+                value={dtmfString}
+                onChange={(e) => setDtmfString(e.target.value.trim())}
+              />
               <Button
                 onClick={() => {
                   session.sendDtmf(dtmfString);
@@ -160,15 +166,16 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           <Button>Send DTMF</Button>
         </Popover>
       )}
-      {!session.isConference && store.webPhone.callSessions.find((s) => s.isConference) && (
-        <Button
-          onClick={() => {
-            store.mergeToConference(session);
-          }}
-        >
-          Merge to Conference
-        </Button>
-      )}
+      {!session.isConference &&
+        store.webPhone.callSessions.find((s) => s.isConference) && (
+          <Button
+            onClick={() => {
+              store.mergeToConference(session);
+            }}
+          >
+            Merge to Conference
+          </Button>
+        )}
       {session.isConference && (
         <Popover
           open={inviteToConfPopoverVisible}

@@ -1,9 +1,9 @@
 import RingCentral from '@rc-ex/core';
 import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
-import WebPhone from 'ringcentral-web-phone';
-import localforage from 'localforage';
-import type { SipInfo } from 'ringcentral-web-phone/types';
 import hyperid from 'hyperid';
+import localforage from 'localforage';
+import WebPhone from 'ringcentral-web-phone';
+import type { SipInfo } from 'ringcentral-web-phone/types';
 
 import store from '.';
 
@@ -26,8 +26,16 @@ const afterLogin = async () => {
 
   // fetch extension and phone number info
   store.extInfo = await rc.restapi().account().extension().get();
-  const numberList = await rc.restapi().account().extension().phoneNumber().get();
-  store.primaryNumber = trimPrefix(numberList.records?.find((n) => n.primary)?.phoneNumber ?? '', '+');
+  const numberList = await rc
+    .restapi()
+    .account()
+    .extension()
+    .phoneNumber()
+    .get();
+  store.primaryNumber = trimPrefix(
+    numberList.records?.find((n) => n.primary)?.phoneNumber ?? '',
+    '+',
+  );
   if (store.primaryNumber !== '') {
     store.callerIds.push(store.primaryNumber);
   }
@@ -56,7 +64,11 @@ const afterLogin = async () => {
   } else {
     console.log('Use cached sipInfo');
   }
-  const webPhone = new WebPhone({ sipInfo: sipInfo as SipInfo, instanceId: uuid(), debug: true });
+  const webPhone = new WebPhone({
+    sipInfo: sipInfo as SipInfo,
+    instanceId: uuid(),
+    debug: true,
+  });
   store.webPhone = webPhone;
   await webPhone.start();
 };

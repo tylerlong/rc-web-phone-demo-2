@@ -5,7 +5,9 @@
   </head>
   <body>
     <script>
-      const urlSearchParams = new URLSearchParams(new URL(window.location.href).search);
+      const urlSearchParams = new URLSearchParams(
+        new URL(window.location.href).search,
+      );
       const code = urlSearchParams.get('code');
       if (code !== null) {
         window.opener.postMessage({ source: 'oauth-callback', code }, '*');

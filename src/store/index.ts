@@ -1,8 +1,8 @@
-import { manage } from 'manate';
-import RingCentral from '@rc-ex/core';
-import { message } from 'antd';
 import AuthorizeUriExtension from '@rc-ex/authorize-uri';
+import RingCentral from '@rc-ex/core';
 import type GetExtensionInfoResponse from '@rc-ex/core/lib/definitions/GetExtensionInfoResponse';
+import { message } from 'antd';
+import { manage } from 'manate';
 import type WebPhone from 'ringcentral-web-phone';
 import type CallSession from 'ringcentral-web-phone/call-session';
 
@@ -35,8 +35,15 @@ export class Store {
   }
 
   public async jwtFlow() {
-    if (this.server === '' || this.clientId === '' || this.clientSecret === '' || this.jwtToken === '') {
-      message.error('Please input server, client ID, client secret and JWT token');
+    if (
+      this.server === '' ||
+      this.clientId === '' ||
+      this.clientSecret === '' ||
+      this.jwtToken === ''
+    ) {
+      message.error(
+        'Please input server, client ID, client secret and JWT token',
+      );
       return;
     }
     const rc = new RingCentral({
@@ -55,7 +62,11 @@ export class Store {
   }
 
   public async authCodeFlow() {
-    if (this.server === '' || this.clientId === '' || this.clientSecret === '') {
+    if (
+      this.server === '' ||
+      this.clientId === '' ||
+      this.clientSecret === ''
+    ) {
       message.error('Please input server, client ID and client secret');
       return;
     }
@@ -67,7 +78,8 @@ export class Store {
     const authorizeUriExtension = new AuthorizeUriExtension();
     await rc.installExtension(authorizeUriExtension);
     const authorizeUri = authorizeUriExtension.buildUri({
-      redirect_uri: window.location.origin + window.location.pathname + 'callback.html',
+      redirect_uri:
+        window.location.origin + window.location.pathname + 'callback.html',
     });
     window.open(
       authorizeUri,
@@ -78,7 +90,8 @@ export class Store {
       if (event.data.source === 'oauth-callback') {
         const token = await rc.authorize({
           code: event.data.code,
-          redirect_uri: window.location.origin + window.location.pathname + 'callback.html',
+          redirect_uri:
+            window.location.origin + window.location.pathname + 'callback.html',
         });
         this.rcToken = token.access_token!;
         this.refreshToken = token.refresh_token!;
@@ -97,31 +110,49 @@ export class Store {
 
   // invite a number to an existing conference
   public async inviteToConference(targetNumber: string) {
-    const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
+    const confSession = this.webPhone.callSessions.find(
+      (cs) => cs.isConference,
+    );
     if (!confSession) {
       return;
     }
     const callSession = await this.webPhone.call(targetNumber);
     const rc = new RingCentral({ server: this.server });
     rc.token = { access_token: this.rcToken };
-    await rc.restapi().account().telephony().sessions(confSession.sessionId).parties().bringIn().post({
-      sessionId: callSession.sessionId,
-      partyId: callSession.partyId,
-    });
+    await rc
+      .restapi()
+      .account()
+      .telephony()
+      .sessions(confSession.sessionId)
+      .parties()
+      .bringIn()
+      .post({
+        sessionId: callSession.sessionId,
+        partyId: callSession.partyId,
+      });
   }
 
   // merge an existing call session to an existing conference
   public async mergeToConference(callSession: CallSession) {
-    const confSession = this.webPhone.callSessions.find((cs) => cs.isConference);
+    const confSession = this.webPhone.callSessions.find(
+      (cs) => cs.isConference,
+    );
     if (!confSession) {
       return;
     }
     const rc = new RingCentral({ server: this.server });
     rc.token = { access_token: this.rcToken };
-    await rc.restapi().account().telephony().sessions(confSession.sessionId).parties().bringIn().post({
-      sessionId: callSession.sessionId,
-      partyId: callSession.partyId,
-    });
+    await rc
+      .restapi()
+      .account()
+      .telephony()
+      .sessions(confSession.sessionId)
+      .parties()
+      .bringIn()
+      .post({
+        sessionId: callSession.sessionId,
+        partyId: callSession.partyId,
+      });
   }
 }
 

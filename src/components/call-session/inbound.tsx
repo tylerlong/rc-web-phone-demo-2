@@ -1,7 +1,7 @@
 import { Button, Input, Popover, Space, Tag } from 'antd';
+import { auto } from 'manate/react';
 import React, { useState } from 'react';
 import type InboundCallSession from 'ringcentral-web-phone/call-session/inbound';
-import { auto } from 'manate/react';
 
 import AnsweredSession from './answered';
 
@@ -108,7 +108,9 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
           </Button>
         </Space>
       ) : null}
-      {session.state === 'answered' ? <AnsweredSession session={session} /> : null}
+      {session.state === 'answered' ? (
+        <AnsweredSession session={session} />
+      ) : null}
     </Space>
   );
 });

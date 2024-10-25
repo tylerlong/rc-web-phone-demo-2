@@ -1,7 +1,16 @@
-import React, { useEffect } from 'react';
-import { auto } from 'manate/react';
-import { Button, Divider, Empty, Form, Input, Select, Space, Typography } from 'antd';
+import {
+  Button,
+  Divider,
+  Empty,
+  Form,
+  Input,
+  Select,
+  Space,
+  Typography,
+} from 'antd';
 import { autoRun } from 'manate';
+import { auto } from 'manate/react';
+import React, { useEffect } from 'react';
 
 import type { Store } from '../store';
 import CallSession from './call-session';
@@ -29,9 +38,11 @@ const Phone = auto((props: { store: Store }) => {
         <Typography.Text>
           Logged in as{' '}
           <strong>
-            {store.extInfo?.contact?.firstName} {store.extInfo?.contact?.lastName}
+            {store.extInfo?.contact?.firstName}{' '}
+            {store.extInfo?.contact?.lastName}
           </strong>
-          . You may dial <strong>{store.primaryNumber}</strong> to reach this web phone.
+          . You may dial <strong>{store.primaryNumber}</strong> to reach this
+          web phone.
         </Typography.Text>
         <Divider>Outbound Call</Divider>
         <Space>
@@ -41,7 +52,10 @@ const Phone = auto((props: { store: Store }) => {
                 value={callerId}
                 onChange={(value) => setCallerId(value)}
                 style={{ width: '10rem' }}
-                options={store.callerIds.map((n) => ({ value: n, label: <span>{n}</span> }))}
+                options={store.callerIds.map((n) => ({
+                  value: n,
+                  label: <span>{n}</span>,
+                }))}
               />
             </Form.Item>
             <Form.Item label="To">
@@ -73,12 +87,17 @@ const Phone = auto((props: { store: Store }) => {
               </div>
             ))}
             {store.webPhone.callSessions.length === 0 && (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No sessions" />
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="No sessions"
+              />
             )}
             {!store.webPhone.callSessions.find((s) => s.isConference) && (
               <>
                 <Divider />
-                <Button onClick={() => store.startConference()}>Start a conference</Button>
+                <Button onClick={() => store.startConference()}>
+                  Start a conference
+                </Button>
               </>
             )}
           </>
