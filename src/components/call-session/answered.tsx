@@ -1,6 +1,6 @@
-import { Button, Input, Popover, Space } from 'antd';
+import { Button, Input, Popover, Select, Space } from 'antd';
 import { auto } from 'manate/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type CallSession from 'ringcentral-web-phone/call-session';
 
 import store from '../../store';
@@ -19,6 +19,23 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
   const [warmTransferMethods, setWarmTransferMethods] = useState<
     undefined | { complete: () => void; cancel: () => void }
   >(undefined);
+
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+
+  useEffect(() => {
+    const fetchDevices = async () => {
+      const newDevices = await navigator.mediaDevices.enumerateDevices();
+      if (
+        newDevices.map((d) => d.deviceId).join('|') !==
+        devices.map((d) => d.deviceId).join('|')
+      ) {
+        setDevices(newDevices);
+      }
+    };
+    fetchDevices();
+    const handler = setInterval(fetchDevices, 10000);
+    return () => clearInterval(handler);
+  }, []);
   return (
     <Space>
       <Button onClick={() => session.hangup()} danger>
@@ -204,6 +221,26 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           <Button type="primary">Invite to Conference</Button>
         </Popover>
       )}
+      <Select
+        options={devices
+          .filter((d) => d.kind === 'audioinput')
+          .map((d) => ({ value: d.deviceId, label: d.label }))}
+        value={session.inputDeviceId}
+        onChange={(value) => {
+          session.changeInputDevice(value);
+        }}
+        style={{ width: 256 }}
+      />
+      <Select
+        options={devices
+          .filter((d) => d.kind === 'audiooutput')
+          .map((d) => ({ value: d.deviceId, label: d.label }))}
+        value={session.outputDeviceId}
+        onChange={(value) => {
+          session.changeOutputDevice(value);
+        }}
+        style={{ width: 256 }}
+      />
     </Space>
   );
 });
