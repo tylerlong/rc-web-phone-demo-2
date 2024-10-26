@@ -231,16 +231,19 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
         }}
         style={{ width: 256 }}
       />
-      <Select
-        options={devices
-          .filter((d) => d.kind === 'audiooutput')
-          .map((d) => ({ value: d.deviceId, label: d.label }))}
-        value={session.outputDeviceId}
-        onChange={(value) => {
-          session.changeOutputDevice(value);
-        }}
-        style={{ width: 256 }}
-      />
+      {/* firefox doesn't support audiooutput selection */}
+      {devices.filter((d) => d.kind === 'audiooutput').length > 0 && (
+        <Select
+          options={devices
+            .filter((d) => d.kind === 'audiooutput')
+            .map((d) => ({ value: d.deviceId, label: d.label }))}
+          value={session.outputDeviceId}
+          onChange={(value) => {
+            session.changeOutputDevice(value);
+          }}
+          style={{ width: 256 }}
+        />
+      )}
     </Space>
   );
 });
