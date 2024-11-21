@@ -37,7 +37,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
     return () => clearInterval(handler);
   }, []);
   return (
-    <Space>
+    <Space wrap>
       <Button onClick={() => session.hangup()} danger>
         {session.isConference ? 'End Conference' : 'Hang up'}
       </Button>
