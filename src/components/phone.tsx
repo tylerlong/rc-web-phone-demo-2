@@ -20,7 +20,7 @@ const Phone = auto((props: { store: Store }) => {
   const [callee, setCallee] = React.useState<string>('');
   const [callerId, setCallerId] = React.useState<string>('');
   useEffect(() => {
-    const { start, stop } = autoRun(store, () => {
+    const { start, stop } = autoRun(() => {
       if (callerId === '' && store.callerIds.length > 0) {
         setCallerId(store.callerIds[0]);
       }

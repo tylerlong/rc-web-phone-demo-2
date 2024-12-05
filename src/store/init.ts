@@ -16,7 +16,7 @@ const init = async () => {
   store.jwtToken = (await localforage.getItem('jwtToken')) ?? '';
 
   // auto save credentials to local
-  const { start } = autoRun(store, () => {
+  const { start } = autoRun(() => {
     localforage.setItem('rcToken', store.rcToken);
     localforage.setItem('refreshToken', store.refreshToken);
     localforage.setItem('server', store.server);
