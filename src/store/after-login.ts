@@ -4,6 +4,7 @@ import hyperid from 'hyperid';
 import localforage from 'localforage';
 import WebPhone from 'ringcentral-web-phone';
 import type { SipInfo } from 'ringcentral-web-phone/types';
+import waitFor from 'wait-for-async';
 
 import store from '.';
 
@@ -66,11 +67,37 @@ const afterLogin = async () => {
   }
   const webPhone = new WebPhone({
     sipInfo: sipInfo as SipInfo,
-    instanceId: uuid(),
+    instanceId: uuid(), // It may not be the best way to always specify a new instanceId, please read https://github.com/ringcentral/ringcentral-web-phone?tab=readme-ov-file#instanceid
     debug: true,
   });
   store.webPhone = webPhone;
   await webPhone.start();
+
+  const closeListener = async (e) => {
+    webPhone.sipClient.wsc.removeEventListener('close', closeListener);
+    if (webPhone.sipClient.disposed) {
+      // webPhone.dispose() has been called, no need to reconnect
+      return;
+    }
+    // disconnected unexpectedly, reconnect
+    console.log(e);
+    let connected = false;
+    let delay = 2000; // initial delay
+    while (!connected) {
+      await waitFor({ interval: delay });
+      try {
+        await webPhone.start();
+        connected = true;
+      } catch (e) {
+        console.log('Error connecting to WebSocket', e);
+        delay *= 2; // exponential backoff
+        delay = Math.min(delay, 60000); // max delay 60s
+      }
+    }
+    // because webPhone.start() will create a new webPhone.sipClient.wsc
+    webPhone.sipClient.wsc.addEventListener('close', closeListener);
+  };
+  webPhone.sipClient.wsc.addEventListener('close', closeListener);
 };
 
 export default afterLogin;
