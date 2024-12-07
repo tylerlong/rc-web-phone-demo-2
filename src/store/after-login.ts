@@ -79,11 +79,11 @@ const afterLogin = async () => {
       // webPhone.dispose() has been called, no need to reconnect
       return;
     }
-    // disconnected unexpectedly, reconnect
-    console.log(e);
+    console.log('WebSocket disconnected unexpectedly', e);
     let connected = false;
     let delay = 2000; // initial delay
     while (!connected) {
+      console.log(`Reconnect WebSocket in ${delay / 1000} seconds`);
       await waitFor({ interval: delay });
       try {
         await webPhone.start();
