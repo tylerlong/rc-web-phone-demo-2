@@ -9,10 +9,10 @@
   dependencies:
     "@ctrl/tinycolor" "^3.6.1"
 
-"@ant-design/cssinjs-utils@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@ant-design/cssinjs-utils/-/cssinjs-utils-1.1.1.tgz#57abb43671023f937348bd33442862c60ac8e8b2"
-  integrity sha512-2HAiyGGGnM0es40SxdszeQAU5iWp41wBIInq+ONTCKjlSKOrzQfnw4JDtB8IBmqE6tQaEKwmzTP2LGdt5DSwYQ==
+"@ant-design/cssinjs-utils@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@ant-design/cssinjs-utils/-/cssinjs-utils-1.1.3.tgz#5dd79126057920a6992d57b38dd84e2c0b707977"
+  integrity sha512-nOoQMLW1l+xR1Co8NFVYiP8pZp3VjIIzqV6D6ShYF2ljtdwWJn5WSsH+7kvCktXL/yhEtWURKOfH5Xz/gzlwsg==
   dependencies:
     "@ant-design/cssinjs" "^1.21.0"
     "@babel/runtime" "^7.23.2"
@@ -1487,37 +1487,22 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
-"@types/node@^22.10.1":
-  version "22.10.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.1.tgz#41ffeee127b8975a05f8c4f83fb89bcb2987d766"
-  integrity sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==
+"@types/node@^22.10.2":
+  version "22.10.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.2.tgz#a485426e6d1fdafc7b0d4c7b24e2c78182ddabb9"
+  integrity sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==
   dependencies:
     undici-types "~6.20.0"
-
-"@types/prop-types@*":
-  version "15.7.12"
-  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.12.tgz#12bb1e2be27293c1406acb6af1c3f3a1481d98c6"
-  integrity sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==
 
 "@types/qs@^6.9.16":
   version "6.9.16"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.16.tgz#52bba125a07c0482d26747d5d4947a64daf8f794"
   integrity sha512-7i+zxXdPD0T4cKDuxCUXJ4wHcsJLwENa6Z3dCu8cfCK743OGy5Nu1RmAGqDPsoTDINVEcdXKRvR/zre+P2Ku1A==
 
-"@types/react-dom@^19.0.1":
-  version "19.0.1"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-19.0.1.tgz#b1032c4c3215018e4028a85a71441560216e51c6"
-  integrity sha512-hljHij7MpWPKF6u5vojuyfV0YA4YURsQG7KT6SzV0Zs2BXAtgdTxG6A229Ub/xiWV4w/7JL8fi6aAyjshH4meA==
-  dependencies:
-    "@types/react" "*"
-
-"@types/react@*":
-  version "18.3.3"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.3.tgz#9679020895318b0915d7a3ab004d92d33375c45f"
-  integrity sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^3.0.2"
+"@types/react-dom@^19.0.2":
+  version "19.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-19.0.2.tgz#ad21f9a1ee881817995fd3f7fd33659c87e7b1b7"
+  integrity sha512-c1s+7TKFaDRRxr1TxccIX2u7sfCnc3RxkVyBIUA2lCpyqCF+QoAwQ/CBg7bsMdVwP120HEH143VQezKtef5nCg==
 
 "@types/urijs@^1.19.25":
   version "1.19.25"
@@ -1644,14 +1629,14 @@ ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-antd@^5.22.3:
-  version "5.22.3"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-5.22.3.tgz#51bd7094562a6ff321a6c152ac3ff8cff770b249"
-  integrity sha512-YyJ9PhsWkTqJzEo1cZ6wBFk8Ofrfs5O3uGsW8vWcpqBLq/w/yPM/nqZkEDoPFeZ1H+nAhuPF/oWmE/sfj3uYeg==
+antd@^5.22.4:
+  version "5.22.4"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-5.22.4.tgz#774146afae561cc1d7460688ea2732cc0e2d8399"
+  integrity sha512-hkYvDgCKiYb7hF+4FNTDup+ZWnHodTl2eoD1x6m5MXnCg3R9OLfhD9aB7IxjtJ20xO70xOsolMfXgpf/h0cVbw==
   dependencies:
     "@ant-design/colors" "^7.1.0"
     "@ant-design/cssinjs" "^1.21.1"
-    "@ant-design/cssinjs-utils" "^1.1.1"
+    "@ant-design/cssinjs-utils" "^1.1.3"
     "@ant-design/icons" "^5.5.2"
     "@ant-design/react-slick" "~1.1.2"
     "@babel/runtime" "^7.25.7"
@@ -1679,12 +1664,12 @@ antd@^5.22.3:
     rc-motion "^2.9.3"
     rc-notification "~5.6.2"
     rc-pagination "~4.3.0"
-    rc-picker "~4.8.2"
+    rc-picker "~4.8.3"
     rc-progress "~4.0.0"
     rc-rate "~2.13.0"
     rc-resize-observer "^1.4.0"
     rc-segmented "~2.5.0"
-    rc-select "~14.16.3"
+    rc-select "~14.16.4"
     rc-slider "~11.1.7"
     rc-steps "~6.0.1"
     rc-switch "~4.1.0"
@@ -1695,7 +1680,7 @@ antd@^5.22.3:
     rc-tree "~5.10.1"
     rc-tree-select "~5.24.5"
     rc-upload "~4.8.1"
-    rc-util "^5.43.0"
+    rc-util "^5.44.0"
     scroll-into-view-if-needed "^3.1.0"
     throttle-debounce "^5.0.2"
 
@@ -2197,7 +2182,7 @@ csso@^5.0.5:
   dependencies:
     css-tree "~2.2.0"
 
-csstype@^3.0.2, csstype@^3.1.3:
+csstype@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
@@ -4190,7 +4175,7 @@ rc-pagination@~4.3.0:
     classnames "^2.3.2"
     rc-util "^5.38.0"
 
-rc-picker@~4.8.2:
+rc-picker@~4.8.3:
   version "4.8.3"
   resolved "https://registry.yarnpkg.com/rc-picker/-/rc-picker-4.8.3.tgz#06cffd5a2201fc8d274e12f7ee32ea8ba6f3f60f"
   integrity sha512-hJ45qoEs4mfxXPAJdp1n3sKwADul874Cd0/HwnsEOE60H+tgiJUGgbOD62As3EG/rFVNS5AWRfBCDJJfmRqOVQ==
@@ -4240,7 +4225,7 @@ rc-segmented@~2.5.0:
     rc-motion "^2.4.4"
     rc-util "^5.17.0"
 
-rc-select@~14.16.2, rc-select@~14.16.3:
+rc-select@~14.16.2, rc-select@~14.16.4:
   version "14.16.4"
   resolved "https://registry.yarnpkg.com/rc-select/-/rc-select-14.16.4.tgz#a98840c4cfb96e263c750e59334ea0a2862e04fc"
   integrity sha512-jP6qf7+vjnxGvPpfPWbGYfFlSl3h8L2XcD4O7g2GYXmEeBC0mw+nPD7i++OOE8v3YGqP8xtYjRKAWCMLfjgxlw==
@@ -4375,6 +4360,14 @@ rc-util@^5.0.1, rc-util@^5.16.1, rc-util@^5.17.0, rc-util@^5.18.1, rc-util@^5.2.
     "@babel/runtime" "^7.18.3"
     react-is "^18.2.0"
 
+rc-util@^5.44.0:
+  version "5.44.1"
+  resolved "https://registry.yarnpkg.com/rc-util/-/rc-util-5.44.1.tgz#979a822bca9c7564119a7ebc212eba5f29bff067"
+  integrity sha512-h6z91oGfWJPZgunkFBWSobfL0CkyLeaUNWP1ru7b05GMUSe2uHgTk0EiFEQ11v+zJBrORuXFl6Htf949ZSDdOw==
+  dependencies:
+    "@babel/runtime" "^7.18.3"
+    react-is "^18.2.0"
+
 rc-virtual-list@^3.14.2, rc-virtual-list@^3.5.1, rc-virtual-list@^3.5.2:
   version "3.14.5"
   resolved "https://registry.yarnpkg.com/rc-virtual-list/-/rc-virtual-list-3.14.5.tgz#593cd13fe05eabf4ad098329704a30c77701869e"
@@ -4499,10 +4492,10 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-ringcentral-web-phone@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.3.tgz#6d60dbed37b77e25d41ecbe9016530d2d4b38c95"
-  integrity sha512-RzDKYDU72OBc2fzoHyPQj9jwoPKwua3JN6f9wRCvKKZlTxikYuBd9WW8sYo1qb2zT3hnpZe+hSayPuiJHZ4eEg==
+ringcentral-web-phone@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.4.tgz#14d8b68f9b85fe2b0ed5f15c5544611b53e224ba"
+  integrity sha512-Pg0y+LCz3s3DGjSthrC4pQZkpNiR0h8t08qf/u3Q6F3djsjL7NbRcLZ0l6VsJ0LiQZGfCOrV+K25RyFGV0MAvA==
   dependencies:
     blueimp-md5 "^2.19.0"
     sdp-transform "^2.15.0"
@@ -4795,7 +4788,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svgo@^3:
+svgo@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-3.3.2.tgz#ad58002652dffbb5986fc9716afe52d869ecbda8"
   integrity sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==
