@@ -49,8 +49,11 @@ const afterLogin = async () => {
   ];
 
   // create and initialize a web phone
-  const cacheKey = `rc-sip-info-${store.extInfo.id}`;
-  let sipInfo = await localforage.getItem<SipInfoResponse>(cacheKey);
+  const cacheKey = `rc-${store.extInfo.id}`;
+  let sipInfo = await localforage.getItem<SipInfoResponse>(
+    `${cacheKey}-sipInfo`,
+  );
+  let deviceId = await localforage.getItem<string>(`${cacheKey}-deviceId`);
   if (sipInfo === null) {
     console.log('Genereate new sipInfo');
     const r = await rc
@@ -61,10 +64,13 @@ const afterLogin = async () => {
         sipInfo: [{ transport: 'WSS' }],
       });
     sipInfo = r.sipInfo![0];
-    await localforage.setItem(cacheKey, sipInfo);
+    deviceId = r.device!.id!;
+    await localforage.setItem(`${cacheKey}-sipInfo`, sipInfo);
+    await localforage.setItem(`${cacheKey}-deviceId`, deviceId);
   } else {
     console.log('Use cached sipInfo');
   }
+  console.log('deviceId:', deviceId);
   const webPhone = new WebPhone({
     sipInfo: sipInfo as SipInfo,
     instanceId: uuid(), // It may not be the best way to always specify a new instanceId, please read https://github.com/ringcentral/ringcentral-web-phone?tab=readme-ov-file#instanceid
