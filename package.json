@@ -4,8 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "yarn lint && rm -rf .parcel-cache && parcel build src/index.html src/callback.html --dist-dir docs --public-url ./",
-    "lint": "tsc --jsx react --skipLibCheck --noEmit --target ESNext --moduleResolution NodeNext --module NodeNext ./src/*.tsx && eslint --fix '**/*.{ts,tsx,js,jsx}' && prettier --write . && sort-package-json",
+    "release": "rm -rf .parcel-cache && parcel build src/index.html src/callback.html --dist-dir docs --public-url ./ && gh-pages -d docs && rm -rf docs",
     "serve": "rm -rf .parcel-cache && parcel src/index.html src/callback.html --dist-dir temp --no-hmr"
   },
   "dependencies": {
@@ -26,6 +25,7 @@
     "crypto-browserify": "^3.12.1",
     "eslint-config-tyler": "^0.2.2",
     "events": "^3.3.0",
+    "gh-pages": "^6.2.0",
     "parcel": "^2.13.3",
     "process": "^0.11.10",
     "sort-package-json": "^2.12.0",
