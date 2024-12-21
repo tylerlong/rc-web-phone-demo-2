@@ -4676,10 +4676,10 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-ringcentral-web-phone@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.4.tgz#14d8b68f9b85fe2b0ed5f15c5544611b53e224ba"
-  integrity sha512-Pg0y+LCz3s3DGjSthrC4pQZkpNiR0h8t08qf/u3Q6F3djsjL7NbRcLZ0l6VsJ0LiQZGfCOrV+K25RyFGV0MAvA==
+ringcentral-web-phone@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.5.tgz#d8438b8f2907a8f9510efce9e439f0ecb0ea21aa"
+  integrity sha512-H16VnT4tR/y/pl5iN1Ob4nZo+8i21A4lAqs1zV6/wcRuup1O5ImcNrh62a/QNS+znBI6Auu1+lDDPJAY0hOtVg==
   dependencies:
     blueimp-md5 "^2.19.0"
     sdp-transform "^2.15.0"

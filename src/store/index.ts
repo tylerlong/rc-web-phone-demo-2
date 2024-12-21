@@ -18,6 +18,7 @@ export class Store {
   public extInfo: GetExtensionInfoResponse;
   public primaryNumber = '';
   public callerIds: string[] = [];
+  public deviceId = '';
 
   public webPhone: WebPhone;
 
@@ -152,6 +153,21 @@ export class Store {
       .post({
         sessionId: callSession.sessionId,
         partyId: callSession.partyId,
+      });
+  }
+
+  public async callControlAnswer(session: CallSession) {
+    const rc = new RingCentral({ server: this.server });
+    rc.token = { access_token: this.rcToken };
+    await rc
+      .restapi()
+      .account()
+      .telephony()
+      .sessions(session.sessionId)
+      .parties(session.partyId)
+      .answer()
+      .post({
+        deviceId: this.deviceId,
       });
   }
 }
