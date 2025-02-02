@@ -9,7 +9,7 @@ import Phone from './phone';
 const App = auto((props: { store: Store }) => {
   const { store } = props;
   const [api, contextHolder] = notification.useNotification();
-  global.notifier = api;
+  globalThis.notifier = api;
   return (
     <>
       {contextHolder}

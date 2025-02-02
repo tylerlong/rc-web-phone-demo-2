@@ -1370,18 +1370,18 @@
     rc-resize-observer "^1.3.1"
     rc-util "^5.44.0"
 
-"@rc-ex/authorize-uri@^1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@rc-ex/authorize-uri/-/authorize-uri-1.3.4.tgz#767555e861ea38b491cb9249d6737d5f7a9286d7"
-  integrity sha512-TeNte6WA+Igj+MMJ5x9BajAhbYyTGttVF0WuKZoliRgpF307bNzYftPV0X9RufYqoeKGK/9QU7ORFyQQ8ZRaFw==
+"@rc-ex/authorize-uri@^1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@rc-ex/authorize-uri/-/authorize-uri-1.3.5.tgz#13fc8864cd2ed7c136076c5f5cb33549179e00b3"
+  integrity sha512-3n3NnPaMhuOIm5Q6qSl0yZmTboK9E3s+YiqC1XrDvNJeBjHRkVDnAP75JwII1uJBTKldj0ChHptuqni8EryphA==
   dependencies:
     "@types/urijs" "^1.19.25"
     urijs "^1.19.11"
 
-"@rc-ex/core@^1.6.4":
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/@rc-ex/core/-/core-1.6.4.tgz#62bd1e6d2206ecd07783b8cacc731a0c5572c30f"
-  integrity sha512-uF4tb1doYqGDXJsaLy2nt3ixAbnnUXl4rQwZBDv2mdpO4ml1iAm25UUqwn4lI2iJEN1ogreHu3en7fWBNYsvkA==
+"@rc-ex/core@^1.6.5":
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/@rc-ex/core/-/core-1.6.5.tgz#374ddda873bec0baf91344223972ac2813dd21e7"
+  integrity sha512-MPsF8m6EDNfKnu/yRMorUFZ0jQ6lQ8uctUU3jdv+MPcRvSuA9J2Rpj2kguLUZpY+OIol4mOKT67BfW1MVnCELA==
   dependencies:
     "@types/qs" "^6.9.18"
     axios "^1.7.9"

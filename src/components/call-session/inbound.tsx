@@ -88,7 +88,7 @@ const InboundSession = auto((props: { session: InboundCallSession }) => {
                         default:
                           break;
                       }
-                      global.notifier.info({
+                      globalThis.notifier.info({
                         message, // who replied
                         description, // what replied
                         duration: 0,

@@ -173,5 +173,5 @@ export class Store {
 }
 
 const store = manage(new Store());
-global.store = store; // for debugging
+globalThis.store = store; // for debugging
 export default store;

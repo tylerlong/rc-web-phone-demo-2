@@ -35,7 +35,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
     fetchDevices();
     const handler = setInterval(fetchDevices, 10000);
     return () => clearInterval(handler);
-  }, []);
+  }, [devices]);
   return (
     <Space wrap>
       <Button onClick={() => session.hangup()} danger>
@@ -145,7 +145,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
         <Button
           onClick={async () => {
             const result = await session.park();
-            global.notifier.info({
+            globalThis.notifier.info({
               message: 'Call Park Result',
               description: <pre>{JSON.stringify(result, null, 2)}</pre>,
               duration: 10,
