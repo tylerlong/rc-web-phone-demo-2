@@ -1,8 +1,8 @@
-import { Button, Divider, Form, Input, Typography } from 'antd';
-import { auto } from 'manate/react';
-import React from 'react';
+import { Button, Divider, Form, Input, Typography } from "antd";
+import { auto } from "manate/react";
+import React from "react";
 
-import type { Store } from '../store';
+import type { Store } from "../store";
 
 const { Text } = Typography;
 
@@ -41,7 +41,7 @@ const Login = auto((props: { store: Store }) => {
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Text type="secondary">
-          Note: Set redirect URI to{' '}
+          Note: Set redirect URI to{" "}
           {window.location.origin + window.location.pathname}
           callback.html
         </Text>

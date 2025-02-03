@@ -1,21 +1,22 @@
-import { Button, Input, Popover, Select, Space } from 'antd';
-import { auto } from 'manate/react';
-import React, { useEffect, useState } from 'react';
-import type CallSession from 'ringcentral-web-phone/call-session';
+import { Button, Input, Popover, Select, Space } from "antd";
+import { auto } from "manate/react";
+import React, { useEffect, useState } from "react";
+import type CallSession from "ringcentral-web-phone/call-session";
 
-import store from '../../store';
+import store from "../../store";
 
 const AnsweredSession = auto((props: { session: CallSession }) => {
   const { session } = props;
   const [transferPopoverVisible, setTransferPopoverVisible] = useState(false);
-  const [transferToNumber, setTransferToNumber] = useState('');
+  const [transferToNumber, setTransferToNumber] = useState("");
   const [flipPopoverVisible, setFlipPopoverVisible] = useState(false);
-  const [flipToNumber, setFlipToNumber] = useState('');
+  const [flipToNumber, setFlipToNumber] = useState("");
   const [dtmfPopoverVisible, setDtmfPopoverVisible] = useState(false);
-  const [dtmfString, setDtmfString] = useState('');
-  const [inviteToConfPopoverVisible, setInviteToConfPopoverVisible] =
-    useState(false);
-  const [inviteToConfNumber, setInviteToConfNumber] = useState('');
+  const [dtmfString, setDtmfString] = useState("");
+  const [inviteToConfPopoverVisible, setInviteToConfPopoverVisible] = useState(
+    false,
+  );
+  const [inviteToConfNumber, setInviteToConfNumber] = useState("");
   const [warmTransferMethods, setWarmTransferMethods] = useState<
     undefined | { complete: () => void; cancel: () => void }
   >(undefined);
@@ -26,8 +27,8 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
     const fetchDevices = async () => {
       const newDevices = await navigator.mediaDevices.enumerateDevices();
       if (
-        newDevices.map((d) => d.deviceId).join('|') !==
-        devices.map((d) => d.deviceId).join('|')
+        newDevices.map((d) => d.deviceId).join("|") !==
+          devices.map((d) => d.deviceId).join("|")
       ) {
         setDevices(newDevices);
       }
@@ -39,7 +40,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
   return (
     <Space wrap>
       <Button onClick={() => session.hangup()} danger>
-        {session.isConference ? 'End Conference' : 'Hang up'}
+        {session.isConference ? "End Conference" : "Hang up"}
       </Button>
       {!session.isConference && (
         <Popover
@@ -89,8 +90,9 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
                   </Button>
                   <Button
                     onClick={async () => {
-                      const { complete, cancel } =
-                        await session.warmTransfer(transferToNumber);
+                      const { complete, cancel } = await session.warmTransfer(
+                        transferToNumber,
+                      );
                       setWarmTransferMethods({ complete, cancel });
                     }}
                   >
@@ -146,7 +148,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
           onClick={async () => {
             const result = await session.park();
             globalThis.notifier.info({
-              message: 'Call Park Result',
+              message: "Call Park Result",
               description: <pre>{JSON.stringify(result, null, 2)}</pre>,
               duration: 10,
             });
@@ -171,7 +173,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
               <Button
                 onClick={() => {
                   session.sendDtmf(dtmfString);
-                  setDtmfString('');
+                  setDtmfString("");
                   setDtmfPopoverVisible(false);
                 }}
               >
@@ -185,14 +187,14 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
       )}
       {!session.isConference &&
         store.webPhone.callSessions.find((s) => s.isConference) && (
-          <Button
-            onClick={() => {
-              store.mergeToConference(session);
-            }}
-          >
-            Merge to Conference
-          </Button>
-        )}
+        <Button
+          onClick={() => {
+            store.mergeToConference(session);
+          }}
+        >
+          Merge to Conference
+        </Button>
+      )}
       {session.isConference && (
         <Popover
           open={inviteToConfPopoverVisible}
@@ -209,7 +211,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
               <Button
                 onClick={() => {
                   store.inviteToConference(inviteToConfNumber);
-                  setInviteToConfNumber('');
+                  setInviteToConfNumber("");
                   setInviteToConfPopoverVisible(false);
                 }}
               >
@@ -223,7 +225,7 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
       )}
       <Select
         options={devices
-          .filter((d) => d.kind === 'audioinput')
+          .filter((d) => d.kind === "audioinput")
           .map((d) => ({ value: d.deviceId, label: d.label }))}
         value={session.inputDeviceId}
         onChange={(value) => {
@@ -232,10 +234,10 @@ const AnsweredSession = auto((props: { session: CallSession }) => {
         style={{ width: 256 }}
       />
       {/* firefox doesn't support audiooutput selection */}
-      {devices.filter((d) => d.kind === 'audiooutput').length > 0 && (
+      {devices.filter((d) => d.kind === "audiooutput").length > 0 && (
         <Select
           options={devices
-            .filter((d) => d.kind === 'audiooutput')
+            .filter((d) => d.kind === "audiooutput")
             .map((d) => ({ value: d.deviceId, label: d.label }))}
           value={session.outputDeviceId}
           onChange={(value) => {

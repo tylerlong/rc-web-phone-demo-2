@@ -1,12 +1,12 @@
-import RingCentral from '@rc-ex/core';
-import type SipInfoResponse from '@rc-ex/core/lib/definitions/SipInfoResponse';
-import hyperid from 'hyperid';
-import localforage from 'localforage';
-import WebPhone from 'ringcentral-web-phone';
-import type { SipInfo } from 'ringcentral-web-phone/types';
-import waitFor from 'wait-for-async';
+import RingCentral from "@rc-ex/core";
+import type SipInfoResponse from "@rc-ex/core/lib/definitions/SipInfoResponse";
+import hyperid from "hyperid";
+import localforage from "localforage";
+import WebPhone from "ringcentral-web-phone";
+import type { SipInfo } from "ringcentral-web-phone/types";
+import waitFor from "wait-for-async";
 
-import store from '.';
+import store from ".";
 
 const uuid = hyperid();
 
@@ -19,7 +19,7 @@ const trimPrefix = (s: string, prefix: string): string => {
 };
 
 const afterLogin = async () => {
-  if (store.rcToken === '') {
+  if (store.rcToken === "") {
     return;
   }
   const rc = new RingCentral();
@@ -34,18 +34,18 @@ const afterLogin = async () => {
     .phoneNumber()
     .get();
   store.primaryNumber = trimPrefix(
-    numberList.records?.find((n) => n.primary)?.phoneNumber ?? '',
-    '+',
+    numberList.records?.find((n) => n.primary)?.phoneNumber ?? "",
+    "+",
   );
-  if (store.primaryNumber !== '') {
+  if (store.primaryNumber !== "") {
     store.callerIds.push(store.primaryNumber);
   }
   store.callerIds = [
     ...store.callerIds,
     ...(numberList.records
       ?.filter((n) => !n.primary)
-      .filter((n) => n.features?.includes('CallerId'))
-      .map((n) => trimPrefix(n.phoneNumber!, '+')) ?? []),
+      .filter((n) => n.features?.includes("CallerId"))
+      .map((n) => trimPrefix(n.phoneNumber!, "+")) ?? []),
   ];
 
   // create and initialize a web phone
@@ -54,24 +54,24 @@ const afterLogin = async () => {
     `${cacheKey}-sipInfo`,
   );
   store.deviceId =
-    (await localforage.getItem<string>(`${cacheKey}-deviceId`)) ?? '';
+    (await localforage.getItem<string>(`${cacheKey}-deviceId`)) ?? "";
   if (sipInfo === null) {
-    console.log('Genereate new sipInfo');
+    console.log("Genereate new sipInfo");
     const r = await rc
       .restapi()
       .clientInfo()
       .sipProvision()
       .post({
-        sipInfo: [{ transport: 'WSS' }],
+        sipInfo: [{ transport: "WSS" }],
       });
     sipInfo = r.sipInfo![0];
     store.deviceId = r.device!.id!;
     await localforage.setItem(`${cacheKey}-sipInfo`, sipInfo);
     await localforage.setItem(`${cacheKey}-deviceId`, store.deviceId);
   } else {
-    console.log('Use cached sipInfo');
+    console.log("Use cached sipInfo");
   }
-  console.log('deviceId:', store.deviceId);
+  console.log("deviceId:", store.deviceId);
   const webPhone = new WebPhone({
     sipInfo: sipInfo as SipInfo,
     instanceId: uuid(), // It may not be the best way to always specify a new instanceId, please read https://github.com/ringcentral/ringcentral-web-phone?tab=readme-ov-file#instanceid
@@ -82,12 +82,12 @@ const afterLogin = async () => {
   await webPhone.start();
 
   const closeListener = async (e) => {
-    webPhone.sipClient.wsc.removeEventListener('close', closeListener);
+    webPhone.sipClient.wsc.removeEventListener("close", closeListener);
     if (webPhone.sipClient.disposed) {
       // webPhone.dispose() has been called, no need to reconnect
       return;
     }
-    console.log('WebSocket disconnected unexpectedly', e);
+    console.log("WebSocket disconnected unexpectedly", e);
     let connected = false;
     let delay = 2000; // initial delay
     while (!connected) {
@@ -97,15 +97,15 @@ const afterLogin = async () => {
         await webPhone.start();
         connected = true;
       } catch (e) {
-        console.log('Error connecting to WebSocket', e);
+        console.log("Error connecting to WebSocket", e);
         delay *= 2; // exponential backoff
         delay = Math.min(delay, 60000); // max delay 60s
       }
     }
     // because webPhone.start() will create a new webPhone.sipClient.wsc
-    webPhone.sipClient.wsc.addEventListener('close', closeListener);
+    webPhone.sipClient.wsc.addEventListener("close", closeListener);
   };
-  webPhone.sipClient.wsc.addEventListener('close', closeListener);
+  webPhone.sipClient.wsc.addEventListener("close", closeListener);
 };
 
 export default afterLogin;

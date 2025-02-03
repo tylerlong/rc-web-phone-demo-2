@@ -23,7 +23,6 @@
     "@types/react-dom": "^19.0.3",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
-    "eslint-config-tyler": "^0.2.2",
     "events": "^3.3.0",
     "gh-pages": "^6.3.0",
     "parcel": "^2.13.3",

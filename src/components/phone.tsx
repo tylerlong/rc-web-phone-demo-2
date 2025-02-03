@@ -7,21 +7,21 @@ import {
   Select,
   Space,
   Typography,
-} from 'antd';
-import { autoRun } from 'manate';
-import { auto } from 'manate/react';
-import React, { useEffect } from 'react';
+} from "antd";
+import { autoRun } from "manate";
+import { auto } from "manate/react";
+import React, { useEffect } from "react";
 
-import type { Store } from '../store';
-import CallSession from './call-session';
+import type { Store } from "../store";
+import CallSession from "./call-session";
 
 const Phone = auto((props: { store: Store }) => {
   const { store } = props;
-  const [callee, setCallee] = React.useState<string>('');
-  const [callerId, setCallerId] = React.useState<string>('');
+  const [callee, setCallee] = React.useState<string>("");
+  const [callerId, setCallerId] = React.useState<string>("");
   useEffect(() => {
     const { start, stop } = autoRun(() => {
-      if (callerId === '' && store.callerIds.length > 0) {
+      if (callerId === "" && store.callerIds.length > 0) {
         setCallerId(store.callerIds[0]);
       }
     });
@@ -33,16 +33,16 @@ const Phone = auto((props: { store: Store }) => {
       <Button id="logout-btn" onClick={() => store.logout()}>
         Log out
       </Button>
-      <Space direction="vertical" style={{ display: 'flex' }}>
+      <Space direction="vertical" style={{ display: "flex" }}>
         <Divider>Inbound Call</Divider>
         <Typography.Text>
-          Logged in as{' '}
+          Logged in as{" "}
           <strong>
-            {store.extInfo?.contact?.firstName}{' '}
+            {store.extInfo?.contact?.firstName}{" "}
             {store.extInfo?.contact?.lastName}
           </strong>
-          . You may dial <strong>{store.primaryNumber}</strong> to reach this
-          web phone.
+          . You may dial <strong>{store.primaryNumber}</strong>{" "}
+          to reach this web phone.
         </Typography.Text>
         <Divider>Outbound Call</Divider>
         <Space>
@@ -51,7 +51,7 @@ const Phone = auto((props: { store: Store }) => {
               <Select
                 value={callerId}
                 onChange={(value) => setCallerId(value)}
-                style={{ width: '10rem' }}
+                style={{ width: "10rem" }}
                 options={store.callerIds.map((n) => ({
                   value: n,
                   label: <span>{n}</span>,
@@ -61,7 +61,7 @@ const Phone = auto((props: { store: Store }) => {
             <Form.Item label="To">
               <Input
                 placeholder="16501234567"
-                style={{ width: '10rem' }}
+                style={{ width: "10rem" }}
                 onChange={(e) => setCallee(e.target.value.trim())}
                 value={callee}
               />

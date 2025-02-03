@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>RingCentral Web Phone React.js Demo OAuth Callback</title>
@@ -8,9 +8,12 @@
       const urlSearchParams = new URLSearchParams(
         new URL(window.location.href).search,
       );
-      const code = urlSearchParams.get('code');
+      const code = urlSearchParams.get("code");
       if (code !== null) {
-        window.opener.postMessage({ source: 'oauth-callback', code }, '*');
+        window.opener.postMessage(
+          { source: "oauth-callback", code },
+          "*",
+        );
         window.close();
       }
     </script>
