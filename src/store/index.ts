@@ -79,21 +79,22 @@ export class Store {
     const authorizeUriExtension = new AuthorizeUriExtension();
     await rc.installExtension(authorizeUriExtension);
     const authorizeUri = authorizeUriExtension.buildUri({
-      redirect_uri: window.location.origin + window.location.pathname +
+      redirect_uri: globalThis.location.origin + globalThis.location.pathname +
         "callback.html",
     });
-    window.open(
+    globalThis.open(
       authorizeUri,
       "popupWindow",
-      `width=600,height=600,left=${window.screenX + 256},top=${
-        window.screenY + 128
+      `width=600,height=600,left=${globalThis.screenX + 256},top=${
+        globalThis.screenY + 128
       }`,
     )!;
-    window.addEventListener("message", async (event) => {
+    globalThis.addEventListener("message", async (event) => {
       if (event.data.source === "oauth-callback") {
         const token = await rc.authorize({
           code: event.data.code,
-          redirect_uri: window.location.origin + window.location.pathname +
+          redirect_uri: globalThis.location.origin +
+            globalThis.location.pathname +
             "callback.html",
         });
         this.rcToken = token.access_token!;

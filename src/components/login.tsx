@@ -42,7 +42,7 @@ const Login = auto((props: { store: Store }) => {
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Text type="secondary">
           Note: Set redirect URI to{" "}
-          {window.location.origin + window.location.pathname}
+          {globalThis.location.origin + globalThis.location.pathname}
           callback.html
         </Text>
       </Form.Item>

@@ -6,15 +6,15 @@
   <body>
     <script>
       const urlSearchParams = new URLSearchParams(
-        new URL(window.location.href).search,
+        new URL(globalThis.location.href).search,
       );
       const code = urlSearchParams.get("code");
       if (code !== null) {
-        window.opener.postMessage(
+        globalThis.opener.postMessage(
           { source: "oauth-callback", code },
           "*",
         );
-        window.close();
+        globalThis.close();
       }
     </script>
   </body>

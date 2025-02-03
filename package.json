@@ -4,6 +4,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "lint": "deno fmt && deno lint --fix",
     "release": "rm -rf .parcel-cache && parcel build src/index.html src/callback.html --dist-dir docs --public-url ./ && gh-pages -d docs && rm -rf docs",
     "serve": "rm -rf .parcel-cache && parcel src/index.html src/callback.html --dist-dir temp --no-hmr"
   },
