@@ -1141,18 +1141,18 @@
     rc-resize-observer "^1.3.1"
     rc-util "^5.44.0"
 
-"@rc-ex/authorize-uri@^1.3.9":
-  version "1.3.9"
-  resolved "https://registry.yarnpkg.com/@rc-ex/authorize-uri/-/authorize-uri-1.3.9.tgz#703d98f0f1b39ab71efb4b2a7a427b117acaef88"
-  integrity sha512-hDMDW+BtIFTyhb6DLP3JSSY08NOp7Q55IHnWDZNaInoreFxfyA3YRqVOfxS60aqn64Eq0Ho0iLZe6ISHYmgBjw==
+"@rc-ex/authorize-uri@^1.3.12":
+  version "1.3.12"
+  resolved "https://registry.yarnpkg.com/@rc-ex/authorize-uri/-/authorize-uri-1.3.12.tgz#faeece0a4c898b0fb878b7bac2f5bd1eebabde22"
+  integrity sha512-wj9p0QAE72ur97vxQ9FhFwYxHh/0Ry+v+NOGDc0Wq0a0SrnBnWtcC9OiaNm+s1taLpu+omrwCt1PWHIKhRc56A==
   dependencies:
     "@types/urijs" "^1.19.25"
     urijs "^1.19.11"
 
-"@rc-ex/core@^1.6.11":
-  version "1.6.11"
-  resolved "https://registry.yarnpkg.com/@rc-ex/core/-/core-1.6.11.tgz#c2e109e9bd587b502c7a4e15d7a1ebe2bab32f49"
-  integrity sha512-2jJqOkq3ymCQtR4nfgxnA6/IjL/zFdXiYrqwvpY6Bvk8z1Vf3SxajDfEbKVDqC4oEriOjOh3FYGclUmeVnQaVQ==
+"@rc-ex/core@^1.6.16":
+  version "1.6.16"
+  resolved "https://registry.yarnpkg.com/@rc-ex/core/-/core-1.6.16.tgz#308f9b90d8a5f12934716fe049b43a2cd85f499a"
+  integrity sha512-XUtqPWgO9qR6PTFDXMC7GqmymCXBzfRViNINTaBg0EgcnoWMpUGk1CSlISe6EzEgMQ/i4m1Za8y2Fp5hmZdPBA==
   dependencies:
     "@types/qs" "^6.9.18"
     axios "^1.7.9"
@@ -1251,10 +1251,10 @@
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
   integrity sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==
 
-"@types/node@^22.13.0":
-  version "22.13.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.13.0.tgz#d376dd9a0ee2f9382d86c2d5d7beb4d198b4ea8c"
-  integrity sha512-ClIbNe36lawluuvq3+YYhnIN2CELi+6q8NpnM7PYp4hBn/TatfboPgVSm2rwKRfnV2M+Ty9GWDFI64KEe+kysA==
+"@types/node@^22.13.1":
+  version "22.13.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.13.1.tgz#a2a3fefbdeb7ba6b89f40371842162fac0934f33"
+  integrity sha512-jK8uzQlrvXqEU91UxiK5J7pKHyzgnI1Qnl0QDHIgVGuolJhRb9EEl28Cj9b3rGR8B2lhFCtvIm5os8lFnO/1Ew==
   dependencies:
     undici-types "~6.20.0"
 
@@ -3569,7 +3569,7 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svgo@^3:
+svgo@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-3.3.2.tgz#ad58002652dffbb5986fc9716afe52d869ecbda8"
   integrity sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==
@@ -3709,10 +3709,10 @@ vm-browserify@^1.1.2:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-wait-for-async@^0.7.10:
-  version "0.7.10"
-  resolved "https://registry.yarnpkg.com/wait-for-async/-/wait-for-async-0.7.10.tgz#7b7cd62f6646f94e02ca1538dd7bc169e539ad72"
-  integrity sha512-bIrLNR2DcGurrCsblMc0HFGg3uTfeGwiaRTs7U6pMfcXN3PTKpjkGsnPf5kqElq6UfizKjfSRilR5j0FY28UqQ==
+wait-for-async@^0.7.11:
+  version "0.7.11"
+  resolved "https://registry.yarnpkg.com/wait-for-async/-/wait-for-async-0.7.11.tgz#25d3c9f1d60204c4ea7c3b2282b8e8f6fbb2c1ca"
+  integrity sha512-pTOHgXv5GNj0DjlvqGMqZ3l8FJhyM6hAqse9ytfvE7NaSXW41BxxSq6GvRGgUH9yeuoil+prGaC3NAkWjwnCPg==
 
 weak-lru-cache@^1.2.2:
   version "1.2.2"
