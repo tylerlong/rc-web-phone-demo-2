@@ -3357,10 +3357,10 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-ringcentral-web-phone@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.7.tgz#f629c749e9d91ad0b28c4c112ec4c6cd6090c478"
-  integrity sha512-vHKRr+5O3eOleKaxzslIEat6roR7YyJU59ILfefUAEH6jXvUSp6PJ7tP+mc6wzyK/f9VlQ/fXZydpn3Kul/i5g==
+ringcentral-web-phone@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/ringcentral-web-phone/-/ringcentral-web-phone-2.0.8.tgz#e5084cbaefeb2e2b097c704168d5347b1b969043"
+  integrity sha512-4QjChNk7nb7ELtPRaLcsQSLSNK7oB7LuSwRyrJhoUpApnS5yU8dozT5wqgrxkbIBWAvCHH/t7M/7JNY1iq+fRg==
   dependencies:
     blueimp-md5 "^2.19.0"
     sdp-transform "^2.15.0"
@@ -3709,10 +3709,10 @@ vm-browserify@^1.1.2:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-wait-for-async@^0.7.11:
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/wait-for-async/-/wait-for-async-0.7.11.tgz#25d3c9f1d60204c4ea7c3b2282b8e8f6fbb2c1ca"
-  integrity sha512-pTOHgXv5GNj0DjlvqGMqZ3l8FJhyM6hAqse9ytfvE7NaSXW41BxxSq6GvRGgUH9yeuoil+prGaC3NAkWjwnCPg==
+wait-for-async@^0.7.13:
+  version "0.7.13"
+  resolved "https://registry.yarnpkg.com/wait-for-async/-/wait-for-async-0.7.13.tgz#ffd59c350fc6edbe47eb4f439a2926f502fa1feb"
+  integrity sha512-sBw2C85eWcRvTWbUmtcMUdVz6KvDkDkRtE5a5YhBANSijs7M6DrHK13lHAxwkTPTcrjVRjEQ/qH9RpK7Q7vlYA==
 
 weak-lru-cache@^1.2.2:
   version "1.2.2"
