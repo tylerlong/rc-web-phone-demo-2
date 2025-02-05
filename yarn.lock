@@ -2523,10 +2523,10 @@ make-dir@^3.0.2:
   dependencies:
     semver "^6.0.0"
 
-manate@^2.0.0-beta.8:
-  version "2.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/manate/-/manate-2.0.0-beta.8.tgz#eedee74af2922a76083410bb72d2801d99671592"
-  integrity sha512-jjMOCeUi3T/o9d28EAm/tDYCj1wYwBqQaXZqkEangfNOdHh+taqFxH+S2HcduXQdcp03fVY2eVWrF+gPdz4Q5w==
+manate@^2.0.0-beta.9:
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/manate/-/manate-2.0.0-beta.9.tgz#351e2a9af525cb7917cc3b1a515f5d70c6df6143"
+  integrity sha512-iGpUXUEJe3iLjCtnVgG+0G3k9vkHnwhKewh3+w7R+LM9sdwW8+27E5H2Nuxvb9ZKfJFU/R/qhW/zsBFjKGFCyQ==
 
 math-intrinsics@^1.1.0:
   version "1.1.0"
