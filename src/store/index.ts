@@ -4,7 +4,7 @@ import type GetExtensionInfoResponse from "@rc-ex/core/lib/definitions/GetExtens
 import { message } from "antd";
 import { manage } from "manate";
 import type WebPhone from "ringcentral-web-phone";
-import type CallSession from "ringcentral-web-phone/call-session";
+import type CallSession from "ringcentral-web-phone/call-session/index";
 
 import afterLogin from "./after-login";
 
