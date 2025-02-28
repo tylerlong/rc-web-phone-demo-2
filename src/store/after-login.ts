@@ -82,12 +82,14 @@ const afterLogin = async () => {
   await webPhone.start();
 
   // handle network outage
-  window.addEventListener("online", () => webPhone.start());
+  window.addEventListener("online", async () => {
+    await webPhone.start();
+  });
 
   // handle network issues
   const closeListener = async (e) => {
     webPhone.sipClient.wsc.removeEventListener("close", closeListener);
-    if (webPhone.sipClient.disposed) {
+    if (webPhone.disposed) {
       // webPhone.dispose() has been called, no need to reconnect
       return;
     }
