@@ -85,6 +85,7 @@ const afterLogin = async () => {
     await webPhone.start();
     webPhone.callSessions.forEach((callSession) => {
       if (callSession.state === "answered") {
+        // in case network switches from one to another
         callSession.reInvite();
       }
     });
