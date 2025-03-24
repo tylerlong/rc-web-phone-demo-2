@@ -81,9 +81,18 @@ const afterLogin = async () => {
   store.webPhone = webPhone;
   await webPhone.start();
 
+  const recover = async () => {
+    await webPhone.start();
+    webPhone.callSessions.forEach((callSession) => {
+      if (callSession.state === "answered") {
+        callSession.reInvite();
+      }
+    });
+  };
+
   // handle network outage
   window.addEventListener("online", async () => {
-    await webPhone.start();
+    await recover();
   });
 
   // handle network issues
@@ -100,7 +109,7 @@ const afterLogin = async () => {
       console.log(`Reconnect WebSocket in ${delay / 1000} seconds`);
       await waitFor({ interval: delay });
       try {
-        await webPhone.start();
+        await recover();
         connected = true;
       } catch (e) {
         console.log("Error connecting to WebSocket", e);
