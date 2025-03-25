@@ -4,6 +4,7 @@ import {
   Empty,
   Form,
   Input,
+  Popover,
   Select,
   Space,
   Typography,
@@ -19,6 +20,10 @@ const Phone = auto((props: { store: Store }) => {
   const { store } = props;
   const [callee, setCallee] = React.useState<string>("");
   const [callerId, setCallerId] = React.useState<string>("");
+  const [calloutPopoverVisible, setCalloutPopoverVisible] = React.useState(
+    false,
+  );
+  const [calloutToNumber, setCalloutToNumber] = React.useState("");
   useEffect(() => {
     const { start, stop } = autoRun(() => {
       if (callerId === "" && store.callerIds.length > 0) {
@@ -94,7 +99,7 @@ const Phone = auto((props: { store: Store }) => {
             )}
             {!store.webPhone.callSessions.find((s) => s.isConference) && (
               <>
-                <Divider />
+                <Divider>Conference</Divider>
                 <Button onClick={() => store.startConference()}>
                   Start a conference
                 </Button>
@@ -102,6 +107,50 @@ const Phone = auto((props: { store: Store }) => {
             )}
           </>
         )}
+        <Divider>Call Control API</Divider>
+        <p>
+          This part is for demonstration only.{" "}
+          <a
+            href="https://developers.ringcentral.com/api-reference/Call-Control/createCallOutCallSession"
+            target="_blank"
+          >
+            Call Control API
+          </a>{" "}
+          is RESTful API, which is out of scope of WebPhone SDK.
+        </p>
+        <Popover
+          open={calloutPopoverVisible}
+          onOpenChange={(visible) => setCalloutPopoverVisible(visible)}
+          trigger="click"
+          placement="top"
+          content={
+            <Space direction="vertical">
+              <Input
+                placeholder="16501234567"
+                value={calloutToNumber}
+                onChange={(e) => setCalloutToNumber(e.target.value.trim())}
+              />
+              <Button
+                onClick={() => {
+                  // todo: make call out to calloutToNumber
+                  store.callout(calloutToNumber);
+                  setCalloutPopoverVisible(false);
+                }}
+              >
+                Make CallOut
+              </Button>
+              Ref:{" "}
+              <a
+                href="https://developers.ringcentral.com/api-reference/Call-Control/createCallOutCallSession"
+                target="_blank"
+              >
+                Documentation
+              </a>
+            </Space>
+          }
+        >
+          <Button>Call out</Button>
+        </Popover>
       </Space>
     </>
   );

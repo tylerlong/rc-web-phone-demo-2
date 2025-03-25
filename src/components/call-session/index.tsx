@@ -1,6 +1,6 @@
 import { auto } from "manate/react";
 import React from "react";
-import type CallSession from "ringcentral-web-phone/call-session";
+import type CallSession from "ringcentral-web-phone/call-session/index";
 import type InboundCallSession from "ringcentral-web-phone/call-session/inbound";
 import type OutboundCallSession from "ringcentral-web-phone/call-session/outbound";
 

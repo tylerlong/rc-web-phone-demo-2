@@ -159,6 +159,15 @@ export class Store {
       });
   }
 
+  //***************************
+  // Below are control APIs
+  // they are for demonstration only
+  // they are not part of WebPhone SDK
+  //***************************
+
+  // use call control API to answer an incoming call
+  // this is not needed. because you can simply call session.answer()
+  // so this is for demonstration only
   public async callControlAnswer(session: CallSession) {
     const rc = new RingCentral({ server: this.server });
     rc.token = { access_token: this.rcToken };
@@ -171,6 +180,22 @@ export class Store {
       .answer()
       .post({
         deviceId: this.deviceId,
+      });
+  }
+
+  // use call control API to make a call out
+  // this is not needed. because you can simply call webPhone.call(toNumber)
+  // so this is for demonstration only
+  public async callout(toNumber: string) {
+    const rc = new RingCentral({ server: this.server });
+    rc.token = { access_token: this.rcToken };
+    await rc
+      .restapi()
+      .account()
+      .telephony()
+      .callOut().post({
+        from: { deviceId: this.deviceId },
+        to: { phoneNumber: toNumber },
       });
   }
 }
